@@ -34,18 +34,25 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:layout_width="96dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView"
             android:src="@drawable/backpack"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lstFonctionnalites"
+            android:clickable="true" />
 
         <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
             android:id="@+id/scrollView" >
 
         </ScrollView>
+
 
     </LinearLayout>
 </RelativeLayout>

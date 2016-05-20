@@ -1,10 +1,8 @@
 package com.example.kevin.intellibag;
 
 import android.bluetooth.BluetoothAdapter;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.*;
 
 import java.text.SimpleDateFormat;
@@ -14,12 +12,14 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     BluetoothAdapter mBluetoothAdapter;
+    ListView listFonct;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        String[] fonctionnalites = new String[]{"Température", "Poids", "Podomètre", "Humidité"};
 
         // Au démarrage : affichage de l'heure
         Calendar c = Calendar.getInstance();
@@ -46,5 +46,10 @@ public class MainActivity extends AppCompatActivity {
                 //Traitement avec arduino
             }
         }
+
+        listFonct = (ListView)findViewById(R.id.lstFonctionnalites);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, fonctionnalites);
+        listFonct.setAdapter(adapter);
+
     }
 }
