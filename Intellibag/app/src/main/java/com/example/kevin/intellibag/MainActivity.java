@@ -8,7 +8,6 @@ import android.widget.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import android.graphics.Color;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -28,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         String[] fonctionnalites = new String[]{"Température", "Poids", "Podomètre", "Humidité"};
 
-        // Au démarrage : affichage de l'heure
+
+/*        // Au démarrage : affichage de l'heure
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         String formattedDate = df.format(c.getTime());
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 //Traitement avec arduino
             }
-        }
+        }*/
 
         listFonct = (ListView)findViewById(R.id.lstFonctionnalites);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, fonctionnalites);
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private void afficherListeTweets(){
         List<Infos> infos = genererTweets();
 
-        Adapter adapter = new Adapter(MainActivity.this, infos);
-        listFonct.setAdapter(adapter);
+        Adapter myAdapter = new Adapter(MainActivity.this, infos);
+        listFonct.setAdapter(myAdapter);
     }
 }
