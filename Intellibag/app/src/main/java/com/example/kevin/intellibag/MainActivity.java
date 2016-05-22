@@ -7,6 +7,13 @@ import android.widget.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import android.graphics.Color;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -51,5 +58,26 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, fonctionnalites);
         listFonct.setAdapter(adapter);
 
+    }
+
+    //
+    //                      PARTIE CHANGEE - LISTE DES INFOS
+    //
+
+    private List<Infos> genererTweets(){
+        List<Infos> infos = new ArrayList<Infos>();
+        infos.add(new Infos(Color.BLACK, "Florent", "Mon premier tweet !"));
+        infos.add(new Infos(Color.BLUE, "Kevin", "C'est ici que ça se passe !"));
+        infos.add(new Infos(Color.GREEN, "Logan", "Que c'est beau..."));
+        infos.add(new Infos(Color.RED, "Mathieu", "Il est quelle heure ??"));
+        return infos;
+    }
+
+
+    private void afficherListeTweets(){
+        List<Infos> infos = genererTweets();
+
+        Adapter adapter = new Adapter(MainActivity.this, infos);
+        listFonct.setAdapter(adapter);
     }
 }
