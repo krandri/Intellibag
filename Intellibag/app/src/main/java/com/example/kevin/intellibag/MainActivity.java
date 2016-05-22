@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Infos> genererTweets(){
         List<Infos> infos = new ArrayList<Infos>();
-        infos.add(new Infos(Color.BLACK, "Florent", "Mon premier tweet !"));
+        infos.add(new Infos(Color.BLACK, "Floret", "Mon premier tweet !"));
         infos.add(new Infos(Color.BLUE, "Kevin", "C'est ici que ça se passe !"));
         infos.add(new Infos(Color.GREEN, "Logan", "Que c'est beau..."));
         infos.add(new Infos(Color.RED, "Mathieu", "Il est quelle heure ??"));
