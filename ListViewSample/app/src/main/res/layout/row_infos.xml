@@ -13,7 +13,6 @@
         />
 
     <TextView
-        android:id="@+id/pseudo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
@@ -21,17 +20,24 @@
         android:layout_toRightOf="@+id/avatar"
         android:layout_alignTop="@+id/avatar"
         android:textStyle="bold"
-        tools:text="Pseudo"
+        tools:text="Catégorie"
         />
 
     <TextView
-        android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:layout_alignLeft="@+id/pseudo"
-        android:layout_below="@+id/pseudo"
-        tools:text="Texte de mon tweet"
+        android:layout_marginLeft="80dp"
+        tools:text="Valeur"
         />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_alignBottom="@+id/avatar"
+ />
+
 
 </RelativeLayout>

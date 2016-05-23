@@ -1,4 +1,4 @@
-package tutosandroidfrance.com.listviewsample;
+package tutosandroidfrance.com.IntellibagExample;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

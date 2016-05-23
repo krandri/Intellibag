@@ -1,14 +1,9 @@
-package tutosandroidfrance.com.listviewsample;
+package tutosandroidfrance.com.IntellibagExample;
 
 import android.bluetooth.BluetoothAdapter;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,20 +51,19 @@ public class MainActivity extends ActionBarActivity {
         afficherListeTweets();
     }
 
-    private List<Tweet> genererTweets(){
-        List<Tweet> tweets = new ArrayList<Tweet>();
-        tweets.add(new Tweet(Color.BLACK, "Florent", "Mon premier tweet !"));
-        tweets.add(new Tweet(Color.BLUE, "Kevin", "C'est ici que ça se passe !"));
-        tweets.add(new Tweet(Color.GREEN, "Logan", "Que c'est beau..."));
-        tweets.add(new Tweet(Color.RED, "Mathieu", "Il est quelle heure ??"));
-        tweets.add(new Tweet(Color.GRAY, "Willy", "On y est presque"));
-        return tweets;
+    private List<Infos> genererTweets(){
+        List<Infos> infoses = new ArrayList<Infos>();
+        infoses.add(new Infos(Color.BLACK, "Poids", 20));
+        infoses.add(new Infos(Color.BLUE, "Nombre de pas effectués", 10));
+        infoses.add(new Infos(Color.GREEN, "Humidité ambiante", 20));
+        infoses.add(new Infos(Color.GREEN, "Température", 20));
+        return infoses;
     }
 
     private void afficherListeTweets(){
-        List<Tweet> tweets = genererTweets();
+        List<Infos> infoses = genererTweets();
 
-        TweetAdapter adapter = new TweetAdapter(MainActivity.this, tweets);
+        InfosAdapter adapter = new InfosAdapter(MainActivity.this, infoses);
         mListView.setAdapter(adapter);
     }
 }
