@@ -53,10 +53,10 @@ public class MainActivity extends ActionBarActivity {
 
     private List<Infos> genererTweets(){
         List<Infos> infoses = new ArrayList<Infos>();
-        infoses.add(new Infos(Color.BLACK, "Poids", 20));
-        infoses.add(new Infos(Color.BLUE, "Nombre de pas effectués", 10));
-        infoses.add(new Infos(Color.GREEN, "Humidité ambiante", 20));
-        infoses.add(new Infos(Color.GREEN, "Température", 20));
+        infoses.add(new Infos(Color.BLACK, "Poids:", 20));
+        infoses.add(new Infos(Color.BLUE, "Nombre de pas effectués:", 10));
+        infoses.add(new Infos(Color.GREEN, "Humidité ambiante:", 20));
+        infoses.add(new Infos(Color.GREEN, "Température:", 20));
         return infoses;
     }
 

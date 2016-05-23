@@ -25,8 +25,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String[] fonctionnalites = new String[]{"Température", "Poids", "Podomètre", "Humidité"};
-
+        listFonct = (ListView)findViewById(R.id.lstFonctionnalites);
+      //  String[] fonctionnalites = new String[]{"Température", "Poids", "Podomètre", "Humidité"};
+        afficherListeTweets();
 
 /*        // Au démarrage : affichage de l'heure
         Calendar c = Calendar.getInstance();
@@ -54,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }*/
 
-        listFonct = (ListView)findViewById(R.id.lstFonctionnalites);
+/*        listFonct = (ListView)findViewById(R.id.lstFonctionnalites);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, fonctionnalites);
-        listFonct.setAdapter(adapter);
+        listFonct.setAdapter(adapter);*/
 
     }
 

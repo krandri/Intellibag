@@ -34,10 +34,10 @@ public class InfosAdapter extends ArrayAdapter<Infos> {
         }
 
         //getItem(position) va récupérer l'item [position] de la List<Infos> tweets
-        Infos infos = getItem(position);
-        viewHolder.categorie.setText(infos.getCategorie());
-        viewHolder.valeur.setText(infos.getValeur());
-        viewHolder.avatar.setImageDrawable(new ColorDrawable(infos.getColor()));
+        Infos info = getItem(position);
+        viewHolder.categorie.setText(info.getCategorie());
+        viewHolder.valeur.setText(Integer.toString(info.getValeur()));
+        viewHolder.avatar.setImageDrawable(new ColorDrawable(info.getColor()));
 
         return convertView;
     }
