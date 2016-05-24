@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,22 +49,22 @@ public class MainActivity extends ActionBarActivity {
                 //Traitement avec arduino
             }
         }
-        afficherListeTweets();
+        afficherListeFonctions();
     }
 
-    private List<Infos> genererTweets(){
-        List<Infos> infoses = new ArrayList<Infos>();
-        infoses.add(new Infos(Color.BLACK, "Poids:", 20));
-        infoses.add(new Infos(Color.BLUE, "Nombre de pas effectués:", 10));
-        infoses.add(new Infos(Color.GREEN, "Humidité ambiante:", 20));
-        infoses.add(new Infos(Color.GREEN, "Température:", 20));
-        return infoses;
+    private List<Fonction> genererFonctions(){
+        List<Fonction> fonctions = new ArrayList<Fonction>();
+        fonctions.add(new Fonction("kilogram", "Poids:", 20));
+        fonctions.add(new Fonction("footsteps_silhouette_variant", "Nombre de pas effectués:", 10));
+        fonctions.add(new Fonction("drops", "Humidité ambiante:", 20));
+        fonctions.add(new Fonction("thermometer", "Température:", 20));
+        return fonctions;
     }
 
-    private void afficherListeTweets(){
-        List<Infos> infoses = genererTweets();
+    private void afficherListeFonctions(){
+        List<Fonction> fonctions = genererFonctions();
 
-        InfosAdapter adapter = new InfosAdapter(MainActivity.this, infoses);
+        FunctionsAdapter adapter = new FunctionsAdapter(MainActivity.this, fonctions);
         mListView.setAdapter(adapter);
     }
 }

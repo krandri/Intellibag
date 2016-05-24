@@ -2,6 +2,7 @@ package tutosandroidfrance.com.IntellibagExample;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +10,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.List;
 
-public class InfosAdapter extends ArrayAdapter<Infos> {
 
-    public InfosAdapter(Context context, List<Infos> infoses) {
-        super(context, 0, infoses);
+public class FunctionsAdapter extends ArrayAdapter<Fonction> {
+
+    public FunctionsAdapter(Context context, List<Fonction> fonctions) {
+        super(context, 0, fonctions);
     }
 
     @Override
@@ -24,28 +27,35 @@ public class InfosAdapter extends ArrayAdapter<Infos> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_infos,parent, false);
         }
 
-        TweetViewHolder viewHolder = (TweetViewHolder) convertView.getTag();
+        FunctionViewHolder viewHolder = (FunctionViewHolder) convertView.getTag();
         if(viewHolder == null){
-            viewHolder = new TweetViewHolder();
+            viewHolder = new FunctionViewHolder();
             viewHolder.categorie = (TextView) convertView.findViewById(R.id.categorie);
             viewHolder.valeur = (TextView) convertView.findViewById(R.id.valeur);
             viewHolder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
             convertView.setTag(viewHolder);
         }
 
-        //getItem(position) va récupérer l'item [position] de la List<Infos> tweets
-        Infos info = getItem(position);
-        viewHolder.categorie.setText(info.getCategorie());
-        viewHolder.valeur.setText(Integer.toString(info.getValeur()));
-        viewHolder.avatar.setImageDrawable(new ColorDrawable(info.getColor()));
-
+        //getItem(position) va récupérer l'item [position] de la List<Fonction> tweets
+        Fonction func = getItem(position);
+        viewHolder.categorie.setText(func.getCategorie());
+        viewHolder.valeur.setText(Integer.toString(func.getValeur()));
+        
+        String img = func.getImg();
+        if(img != null)
+        {
+            int resId = getContext().getResources().getIdentifier(img, "drawable", getContext().getPackageName());
+            viewHolder.avatar.setImageResource(resId);
+        }
         return convertView;
     }
 
-    private class TweetViewHolder{
+    private class FunctionViewHolder{
         public TextView categorie;
         public TextView valeur;
         public ImageView avatar;
 
     }
+
+
 }

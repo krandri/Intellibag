@@ -3,23 +3,23 @@ package tutosandroidfrance.com.IntellibagExample;
 /**
  * Created by florentchampigny on 24/02/15.
  */
-public class Infos {
-    private int color;
+public class Fonction {
+    private String img;
     private String categorie;
     private int valeur;
 
-    public Infos(int color, String categorie, int valeur) {
-        this.color = color;
+    public Fonction(String img, String categorie, int valeur) {
+        this.img = img;
         this.categorie = categorie;
         this.valeur = valeur;
     }
 
-    public int getColor() {
-        return color;
+    public String getImg() {
+        return img;
     }
 
-    public void setColor(int color) {
-        this.color = color;
+    public void setImg(int color) {
+        this.img = img;
     }
 
     public String getCategorie() {
