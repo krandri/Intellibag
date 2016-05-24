@@ -1,41 +1,36 @@
 package com.example.kevin.intellibag;
 
 import android.bluetooth.BluetoothAdapter;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.*;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import android.graphics.Color;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-
 
 public class MainActivity extends AppCompatActivity {
 
     BluetoothAdapter mBluetoothAdapter;
-    ListView listFonct;
-
+    ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        listFonct = (ListView)findViewById(R.id.lstFonctionnalites);
-      //  String[] fonctionnalites = new String[]{"Température", "Poids", "Podomètre", "Humidité"};
-        afficherListeTweets();
+        mListView = (ListView) findViewById(R.id.listView);
 
-/*        // Au démarrage : affichage de l'heure
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         String formattedDate = df.format(c.getTime());
 
-        TextView txtDate = (TextView)findViewById(R.id.textDate);
+        TextView txtDate = (TextView)findViewById(R.id.txtDate);
         txtDate.setText(formattedDate);
+
 
         //Vérifier que le bluetooth est déclenché
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -45,40 +40,30 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            if (!mBluetoothAdapter.isEnabled())
-            {
+            if (!mBluetoothAdapter.isEnabled()) {
                 Toast.makeText(MainActivity.this, "Votre appareil n'est pas connecté en bluetooth.", Toast.LENGTH_LONG).show();
             }
             else
             {
                 //Traitement avec arduino
             }
-        }*/
-
-/*        listFonct = (ListView)findViewById(R.id.lstFonctionnalites);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, fonctionnalites);
-        listFonct.setAdapter(adapter);*/
-
+        }
+        afficherListeFonctions();
     }
 
-    //
-    //                      PARTIE CHANGEE - LISTE DES INFOS
-    //
-
-    private List<Infos> genererTweets(){
-        List<Infos> infos = new ArrayList<Infos>();
-        infos.add(new Infos(Color.BLACK, "Floret", "Mon premier tweet !"));
-        infos.add(new Infos(Color.BLUE, "Kevin", "C'est ici que ça se passe !"));
-        infos.add(new Infos(Color.GREEN, "Logan", "Que c'est beau..."));
-        infos.add(new Infos(Color.RED, "Mathieu", "Il est quelle heure ??"));
-        return infos;
+    private List<Fonction> genererFonctions(){
+        List<Fonction> fonctions = new ArrayList<Fonction>();
+        fonctions.add(new Fonction("kilogram", "Poids:", 20));
+        fonctions.add(new Fonction("footsteps_silhouette_variant", "Nombre de pas effectués:", 10));
+        fonctions.add(new Fonction("drops", "Humidité ambiante:", 20));
+        fonctions.add(new Fonction("thermometer", "Température:", 20));
+        return fonctions;
     }
 
+    private void afficherListeFonctions(){
+        List<Fonction> fonctions = genererFonctions();
 
-    private void afficherListeTweets(){
-        List<Infos> infos = genererTweets();
-
-        Adapter myAdapter = new Adapter(MainActivity.this, infos);
-        listFonct.setAdapter(myAdapter);
+        FunctionsAdapter adapter = new FunctionsAdapter(MainActivity.this, fonctions);
+        mListView.setAdapter(adapter);
     }
 }
