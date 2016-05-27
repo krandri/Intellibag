@@ -33,7 +33,7 @@ public class FunctionsAdapter extends ArrayAdapter<Fonction> {
             convertView.setTag(viewHolder);
         }
 
-        //getItem(position) va récupérer l'item [position] de la List<Fonction> tweets
+        //getItem(position) va récupérer l'item [position] de la List<Fonction> fonctions
         Fonction func = getItem(position);
         viewHolder.categorie.setText(func.getCategorie());
         viewHolder.valeur.setText(Integer.toString(func.getValeur()));
@@ -46,6 +46,7 @@ public class FunctionsAdapter extends ArrayAdapter<Fonction> {
         }
         return convertView;
     }
+
 
     private class FunctionViewHolder{
         public TextView categorie;

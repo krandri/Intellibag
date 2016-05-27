@@ -1,9 +1,12 @@
 package com.example.kevin.intellibag;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mListView = (ListView) findViewById(R.id.listView);
+
+        mListView = (ListView) findViewById(R.id.lstFunc);
 
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -46,9 +50,18 @@ public class MainActivity extends AppCompatActivity {
             else
             {
                 //Traitement avec arduino
+
             }
         }
         afficherListeFonctions();
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+              Toast.makeText(MainActivity.this, "Click sur l'item numero", Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     private List<Fonction> genererFonctions(){
