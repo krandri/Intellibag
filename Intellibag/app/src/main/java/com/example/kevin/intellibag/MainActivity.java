@@ -45,10 +45,16 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             if (!mBluetoothAdapter.isEnabled()) {
-                Toast.makeText(MainActivity.this, "Votre appareil n'est pas connecté en bluetooth.", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Votre appareil n'est pas connecté en bluetooth. Activation en cours..", Toast.LENGTH_LONG).show();
+                mBluetoothAdapter.enable();
+                Toast.makeText(MainActivity.this, "Votre appareil est maintenant connecté en bluetooth.", Toast.LENGTH_LONG).show();
+
+
+
             }
             else
             {
+                Toast.makeText(MainActivity.this, "Votre appareil est  connecté en bluetooth.", Toast.LENGTH_LONG).show();
                 //Traitement avec arduino
 
             }
