@@ -16,6 +16,8 @@ import android.widget.Toast;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
+    private final String DEVICE_ADDRESS="00:14:02:26:01:91";
+    private BluetoothDevice mDevice;
     Button boutonOn;
     Button boutonCo;
     TextView txtBluetooth;
@@ -72,6 +74,10 @@ public class MainActivity extends AppCompatActivity {
                 String devices = (String) txtDevices.getText();
                 for (BluetoothDevice device : pairedDevices){
                     devices += "\n" + device.getName() + ": " + device.getAddress();
+                    if (device.getAddress().equals(DEVICE_ADDRESS))
+                    {
+                        mDevice = device;
+                    }
                 }
                 txtDevices.setText(devices);
 

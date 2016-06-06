@@ -5,7 +5,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:weightSum="1">
 
         <TextView
             android:layout_width="wrap_content"
@@ -23,10 +24,20 @@
             android:id="@+id/txtDate"
             android:layout_gravity="center_horizontal" />
 
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:text="Actualiser"
+            android:id="@+id/btnRefresh"
+            android:layout_gravity="center_horizontal"
+            android:onClick="refresh" />
+
         <ListView
             android:id="@+id/lstFunc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
 
 </RelativeLayout>
