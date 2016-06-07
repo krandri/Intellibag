@@ -46,6 +46,16 @@ public class MainActivity extends AppCompatActivity {
     private ListView mListView;
     private Button btnRefresh;
 
+    String humid = "hmd";
+    String temperature = "tmp";
+    String poids = "pds";
+    String podometre = "pdm";
+
+    String humidValue;
+    String temperatureValue;
+    String poidsValue;
+    String podometreValue;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
               Toast.makeText(MainActivity.this, "Click sur l'item numero", Toast.LENGTH_LONG).show();
             }
         });
-
+        sendData();
     }
 
     public void connexionBt(){
@@ -119,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            /*boolean connected = true;
+            boolean connected = true;
             try{
                 mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(PORT_UUID);
                 mBluetoothSocket.connect();
@@ -136,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                 catch(IOException e){
                     e.printStackTrace();
                 }
-            }*/
+            }
 
         }
 
@@ -144,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-   /* public void BeginListening(){
+    public void BeginListening(){
         final Handler handler = new Handler();
         stopThreadCom = false;
         buffer = new byte[1024];
@@ -165,6 +175,10 @@ public class MainActivity extends AppCompatActivity {
                             handler.post(new Runnable() {
                                 public void run()
                                 {
+                                    humidValue=string.substring(1, 2);
+                                    temperatureValue=string.substring(3, 4);
+                                    poidsValue=string.substring(5, 6);
+                                    podometreValue=string.substring(7, 9);
                                     //Ici operations pour remplir txtViews
                                 }
                             });
@@ -184,14 +198,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendData() {
 
-    }*/
+        try {
+            oStream.write(humid.getBytes());
+            oStream.write(temperature.getBytes());
+            oStream.write(poids.getBytes());
+            oStream.write(podometre.getBytes());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private List<Fonction> genererFonctions(){
         List<Fonction> fonctions = new ArrayList<Fonction>();
-        fonctions.add(new Fonction("kilogram", "Poids:", 20));
-        fonctions.add(new Fonction("footsteps_silhouette_variant", "Nombre de pas effectués:", 10));
-        fonctions.add(new Fonction("drops", "Humidité ambiante:", 20));
-        fonctions.add(new Fonction("thermometer", "Température:", 20));
+        fonctions.add(new Fonction("kilogram", "Poids:", poidsValue));
+        fonctions.add(new Fonction("footsteps_silhouette_variant", "Nombre de pas effectués:", podometreValue));
+        fonctions.add(new Fonction("drops", "Humidité ambiante:", humidValue));
+        fonctions.add(new Fonction("thermometer", "Température:", temperatureValue));
         return fonctions;
     }
 

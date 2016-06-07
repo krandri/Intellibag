@@ -4,9 +4,9 @@ package com.example.kevin.intellibag;
 public class Fonction {
     private String img;
     private String categorie;
-    private int valeur;
+    private String valeur;
 
-    public Fonction(String img, String categorie, int valeur) {
+    public Fonction(String img, String categorie, String valeur) {
         this.img = img;
         this.categorie = categorie;
         this.valeur = valeur;
@@ -28,7 +28,7 @@ public class Fonction {
         this.categorie = categorie;
     }
 
-    public int getValeur() {
+    public String getValeur() {
         return valeur;
     }
 
