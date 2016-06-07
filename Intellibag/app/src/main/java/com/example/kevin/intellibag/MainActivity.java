@@ -87,6 +87,13 @@ public class MainActivity extends AppCompatActivity {
             connexionBt();
         }
 
+/*        try{
+            refresh();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
         afficherListeFonctions();
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -95,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
               Toast.makeText(MainActivity.this, "Click sur l'item numero", Toast.LENGTH_LONG).show();
             }
         });
-        sendData();
+        //sendData();
     }
 
     public void connexionBt(){
@@ -106,7 +113,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void refresh(View v) throws IOException{
+    public void onClickRefresh(View v)
+    {
+        try
+        {
+            refresh();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void refresh() throws IOException{
         if(!mBluetoothAdapter.isEnabled())
         {
             connexionBt();
@@ -146,6 +164,17 @@ public class MainActivity extends AppCompatActivity {
                 catch(IOException e){
                     e.printStackTrace();
                 }
+
+                try {
+                    iStream=mBluetoothSocket.getInputStream();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                //sendData();
+                beginListening();
+
             }
 
         }
@@ -154,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void BeginListening(){
+    public void beginListening(){
         final Handler handler = new Handler();
         stopThreadCom = false;
         buffer = new byte[1024];
@@ -196,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
 
-    public void sendData() {
+/*    public void sendData() {
 
         try {
             oStream.write(humid.getBytes());
@@ -207,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     private List<Fonction> genererFonctions(){
         List<Fonction> fonctions = new ArrayList<Fonction>();

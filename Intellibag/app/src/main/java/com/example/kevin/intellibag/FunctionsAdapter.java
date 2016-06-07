@@ -36,7 +36,7 @@ public class FunctionsAdapter extends ArrayAdapter<Fonction> {
         //getItem(position) va récupérer l'item [position] de la List<Fonction> fonctions
         Fonction func = getItem(position);
         viewHolder.categorie.setText(func.getCategorie());
-        viewHolder.valeur.setText(Integer.toString(func.getValeur()));
+        viewHolder.valeur.setText(func.getValeur());
 
         String img = func.getImg();
         if(img != null)
