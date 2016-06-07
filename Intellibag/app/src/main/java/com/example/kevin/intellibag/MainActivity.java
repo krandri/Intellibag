@@ -272,6 +272,11 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case BluetoothAdapter.STATE_ON:
                         Toast.makeText(MainActivity.this, "Bluetooth: connecté", Toast.LENGTH_LONG).show();
+/*                        try {
+                            refresh();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }*/
                         break;
                     case BluetoothAdapter.STATE_TURNING_ON:
                         Toast.makeText(MainActivity.this, "Bluetooth: connexion...", Toast.LENGTH_LONG).show();
