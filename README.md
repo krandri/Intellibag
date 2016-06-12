@@ -1,2 +1,2 @@
-# Intellibag
-le dossier 'MyApplication' était pour des tests, le code est toujours dans Intellibag
+# Nom à décider
+Ceci est le repository contenant le code de notre application. 
