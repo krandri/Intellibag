@@ -30,6 +30,8 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
+    private List<Fonction> fonctions = new ArrayList<Fonction>();
+
     private final String DEVICE_ADDRESS="00:14:02:26:01:91"; //Adresse MAC de l'Arduino
     private final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");//Serial Port Service ID
 
@@ -51,11 +53,16 @@ public class MainActivity extends AppCompatActivity {
     String poids = "pds";
     String podometre = "pdm";
 
-    String humidValue;
-    String temperatureValue;
-    String poidsValue;
-    String podometreValue;
+    String humidValue = "00";
+    String temperatureValue = "00";
+    String poidsValue = "00";
+    String podometreValue = "00";
 
+    public void setListeFonctions(List<Fonction> list)
+    {
+        this.fonctions = list;
+    }
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
 
         mListView = (ListView) findViewById(R.id.lstFunc);
         btnRefresh = (Button) findViewById(R.id.btnRefresh);
+
+        fonctions = genererFonctions();
 
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -172,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                //sendData();
                 beginListening();
 
             }
@@ -184,6 +192,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void beginListening(){
+        Toast.makeText(MainActivity.this,"Début de la lecture des données...",Toast.LENGTH_SHORT).show();
+        //sendData();
         final Handler handler = new Handler();
         stopThreadCom = false;
         buffer = new byte[1024];
@@ -208,7 +218,12 @@ public class MainActivity extends AppCompatActivity {
                                     temperatureValue=string.substring(3, 4);
                                     poidsValue=string.substring(5, 6);
                                     podometreValue=string.substring(7, 9);
-                                    //Ici operations pour remplir txtViews
+                                    //Ici operations pour remplir txtViews+ remplissage BDD
+                                    for(Fonction f : fonctions){
+
+
+                                    }
+
                                 }
                             });
 
@@ -239,21 +254,25 @@ public class MainActivity extends AppCompatActivity {
     }*/
 
     private List<Fonction> genererFonctions(){
-        List<Fonction> fonctions = new ArrayList<Fonction>();
-        fonctions.add(new Fonction("kilogram", "Poids:", poidsValue));
-        fonctions.add(new Fonction("footsteps_silhouette_variant", "Nombre de pas effectués:", podometreValue));
-        fonctions.add(new Fonction("drops", "Humidité ambiante:", humidValue));
-        fonctions.add(new Fonction("thermometer", "Température:", temperatureValue));
+        Fonction poids = new Fonction("kilogram", "Poids", poidsValue);
+        Fonction podom = new Fonction("footsteps_silhouette_variant", "Nombre de pas effectués", podometreValue);
+        Fonction humid = new Fonction("drops", "Humidité ambiante", humidValue);
+        Fonction temper = new Fonction("thermometer", "Température", temperatureValue);
+
+        fonctions.add(poids);
+        fonctions.add(podom);
+        fonctions.add(humid);
+        fonctions.add(temper);
+
         return fonctions;
     }
 
     private void afficherListeFonctions(){
-        List<Fonction> fonctions = genererFonctions();
+        //fonctions = genererFonctions();
 
         FunctionsAdapter adapter = new FunctionsAdapter(MainActivity.this, fonctions);
         mListView.setAdapter(adapter);
     }
-
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -272,11 +291,11 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case BluetoothAdapter.STATE_ON:
                         Toast.makeText(MainActivity.this, "Bluetooth: connecté", Toast.LENGTH_LONG).show();
-/*                        try {
+                        try {
                             refresh();
                         } catch (IOException e) {
                             e.printStackTrace();
-                        }*/
+                        }
                         break;
                     case BluetoothAdapter.STATE_TURNING_ON:
                         Toast.makeText(MainActivity.this, "Bluetooth: connexion...", Toast.LENGTH_LONG).show();
