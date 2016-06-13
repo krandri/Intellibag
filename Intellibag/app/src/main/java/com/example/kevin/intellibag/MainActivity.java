@@ -109,6 +109,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
               Toast.makeText(MainActivity.this, "Click sur l'item numero", Toast.LENGTH_LONG).show();
+
+                final Button loginButton = (Button) findViewById(R.id.btnBoussole);
+                loginButton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, Boussole.class);
+                        startActivity(intent);
+                    }
+                });
             }
         });
 

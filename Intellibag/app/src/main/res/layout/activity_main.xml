@@ -30,8 +30,15 @@
             android:layout_height="35dp"
             android:text="Actualiser"
             android:id="@+id/btnRefresh"
-            android:layout_gravity="center_horizontal"
+           android:layout_gravity="center_horizontal"
             android:onClick="onClickRefresh" />
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:text="Boussole"
+            android:id="@+id/btnBoussole"
+            android:layout_gravity="center_horizontal" />
 
         <ListView
             android:id="@+id/lstFunc"
