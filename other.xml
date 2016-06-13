@@ -50,57 +50,6 @@
       <option name="ENABLED" value="true" />
     </filter>
   </component>
-  <component name="FindSettings">
-    <option name="SEARCH_OVERLOADED_METHODS" value="false" />
-    <option name="SEARCH_IN_LIBRARIES" value="false" />
-    <option name="SKIP_RESULTS_WHEN_ONE_USAGE" value="false" />
-    <option name="FIND_DIRECTION" value="forward" />
-    <option name="FIND_ORIGIN" value="from_cursor" />
-    <option name="FIND_SCOPE" value="global" />
-    <option name="FIND_CUSTOM_SCOPE" />
-    <option name="CASE_SENSITIVE_SEARCH" value="false" />
-    <option name="LOCAL_CASE_SENSITIVE_SEARCH" value="false" />
-    <option name="PRESERVE_CASE_REPLACE" value="false" />
-    <option name="WHOLE_WORDS_ONLY" value="false" />
-    <option name="COMMENTS_ONLY" value="false" />
-    <option name="STRING_LITERALS_ONLY" value="false" />
-    <option name="LOCAL_WHOLE_WORDS_ONLY" value="false" />
-    <option name="REGULAR_EXPRESSIONS" value="false" />
-    <option name="LOCAL_REGULAR_EXPRESSIONS" value="false" />
-    <option name="WITH_SUBDIRECTORIES" value="true" />
-    <option name="SEARCH_SCOPE" value="All Project Classes" />
-    <option name="FILE_MASK" />
-    <option name="RECENT_FIND_STRINGS">
-      <value>
-        <list size="0" />
-      </value>
-    </option>
-    <option name="RECENT_REPLACE_STRINGS">
-      <value>
-        <list size="0" />
-      </value>
-    </option>
-    <option name="RECENT_DIR_STRINGS">
-      <value>
-        <list size="0" />
-      </value>
-    </option>
-    <option name="RECENT_FILE_MASKS">
-      <value>
-        <list size="9">
-          <item index="0" class="java.lang.String" itemvalue="*.properties" />
-          <item index="1" class="java.lang.String" itemvalue="*.html" />
-          <item index="2" class="java.lang.String" itemvalue="*.jsp" />
-          <item index="3" class="java.lang.String" itemvalue="*.xml" />
-          <item index="4" class="java.lang.String" itemvalue="*.java" />
-          <item index="5" class="java.lang.String" itemvalue="*.js" />
-          <item index="6" class="java.lang.String" itemvalue="*.as" />
-          <item index="7" class="java.lang.String" itemvalue="*.css" />
-          <item index="8" class="java.lang.String" itemvalue="*.mxml" />
-        </list>
-      </value>
-    </option>
-  </component>
   <component name="XDebuggerSettings">
     <data-views />
     <debuggers>
