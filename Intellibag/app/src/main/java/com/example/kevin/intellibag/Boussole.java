@@ -44,7 +44,7 @@ public class Boussole extends Activity {
         setContentView(R.layout.boussole);
 		Intent i = getIntent();
         compassView = (CompassView)findViewById(R.id.boussole);
-        //R�cup�ration du gestionnaire de capteurs
+        //Recuperation du gestionnaire de capteurs
         sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         //Demander au gestionnaire de capteur de nous retourner les capteurs de type boussole
         List<Sensor> sensors =sensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
@@ -53,18 +53,17 @@ public class Boussole extends Activity {
         	sensor = sensors.get(0);
         }
 
-		final Button loginButton = (Button) findViewById(R.id.btnRetour);
+/*		final Button loginButton = (Button) findViewById(R.id.btnRetour);
 		loginButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(Boussole.this, MainActivity.class);
-				startActivity(intent);
+				finish();
 			}
-		});
+		});*/
     }
     
-	//Mettre � jour l'orientation
+	//Mettre a jour l'orientation
     protected void updateOrientation(float rotation) {
 		compassView.setNorthOrientation(rotation);
 	}
@@ -72,14 +71,14 @@ public class Boussole extends Activity {
 	@Override
     protected void onResume(){
     	super.onResume();
-    	//Lier les �v�nements de la boussole num�rique au listener
+    	//Lier les evenements de la boussole numerique au listener
     	sensorManager.registerListener(sensorListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 	}
 	
 	@Override
 	protected void onStop(){
 		super.onStop();
-		//Retirer le lien entre le listener et les �v�nements de la boussole num�rique
+		//Retirer le lien entre le listener et les evenements de la boussole numerique
 		sensorManager.unregisterListener(sensorListener);
 	}
 }

@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView mListView;
     private Button btnRefresh;
+    private Button loginButton;
 
     String humid = "hmd";
     String temperature = "tmp";
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
         mListView = (ListView) findViewById(R.id.lstFunc);
         btnRefresh = (Button) findViewById(R.id.btnRefresh);
+        loginButton = (Button) findViewById(R.id.btnBoussole);
+
 
         fonctions = genererFonctions();
 
@@ -105,20 +108,22 @@ public class MainActivity extends AppCompatActivity {
 
         afficherListeFonctions();
 
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Boussole.class);
+                startActivity(intent);
+            }
+        });
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-              Toast.makeText(MainActivity.this, "Click sur l'item numero", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Click sur l'item numero " + position + " id " + id, Toast.LENGTH_LONG).show();
 
-                final Button loginButton = (Button) findViewById(R.id.btnBoussole);
-                loginButton.setOnClickListener(new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, Boussole.class);
-                        startActivity(intent);
-                    }
-                });
             }
         });
 

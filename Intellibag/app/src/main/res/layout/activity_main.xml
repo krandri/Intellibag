@@ -12,7 +12,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Intellibag"
+            android:text="iKing Bag"
             android:id="@+id/textView"
             android:layout_gravity="center_horizontal" />
 
@@ -24,21 +24,34 @@
             android:id="@+id/txtDate"
             android:layout_gravity="center_horizontal" />
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:text="Actualiser"
-            android:id="@+id/btnRefresh"
-           android:layout_gravity="center_horizontal"
-            android:onClick="onClickRefresh" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="49dp">
 
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="35dp"
-            android:text="Boussole"
-            android:id="@+id/btnBoussole"
-            android:layout_gravity="center_horizontal" />
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:text="Actualiser"
+                android:id="@+id/btnRefresh"
+               android:layout_gravity="center_horizontal"
+                android:onClick="onClickRefresh"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="82dp"
+                android:layout_marginStart="82dp" />
+
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:text="Boussole"
+                android:id="@+id/btnBoussole"
+                android:layout_gravity="center_horizontal"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/btnRefresh"
+                android:layout_toEndOf="@+id/btnRefresh" />
+        </RelativeLayout>
 
         <ListView
             android:id="@+id/lstFunc"

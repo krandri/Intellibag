@@ -34,22 +34,22 @@ public class CompassView extends View {
     
     private Path trianglePath;
 
-    //D�lais entre chaque image
+    //Delais entre chaque image
     private final int DELAY = 20;
-    //Dur�e de l'animation
+    //Duree de l'animation
     private final int DURATION = 1000;
     
     private float startNorthOrientation;
     private float endNorthOrientation;
     
-    //Heure de d�but de l�animation (ms)
+    //Heure de debut de l'animation (ms)
     private long startTime;
     
-    //Pourcentage d'�volution de l'animation
+    //Pourcentage d'evolution de l'animation
     private float perCent;
     //Temps courant
     private long curTime;
-    //Temps total depuis le d�but de l'animation
+    //Temps total depuis le debut de l'animation
     private long totalTime;
     
     private Runnable animationTask = new Runnable() {
@@ -63,7 +63,7 @@ public class CompassView extends View {
             } else {
                 perCent = ((float) totalTime) / DURATION;
 
-                // Animation plus r�aliste de l'aiguille
+                // Animation plus realiste de l'aiguille
                 perCent          = (float) Math.sin(perCent * 1.5);
                 perCent          = Math.min(perCent, 1);
                 northOrientation = (float) (startNorthOrientation + perCent * (endNorthOrientation - startNorthOrientation));
@@ -77,20 +77,20 @@ public class CompassView extends View {
 
     //~--- constructors -------------------------------------------------------
 
-    // Constructeur par d�faut de la vue
+    // Constructeur par defaut de la vue
     public CompassView(Context context) {
         super(context);
         initView();
     }
 
-    // Constructeur utilis� pour instancier la vue depuis sa
-    // d�claration dans un fichier XML
+    // Constructeur utilise pour instancier la vue depuis sa
+    // declaration dans un fichier XML
     public CompassView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
     }
 
-    // idem au pr�c�dant
+    // idem au precedant
     public CompassView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView();
@@ -98,7 +98,7 @@ public class CompassView extends View {
 
     //~--- get methods --------------------------------------------------------
 
-    // permet de r�cup�rer l'orientation de la boussole
+    // permet de recuperer l'orientation de la boussole
     public float getNorthOrientation() {
         return northOrientation;
     }
@@ -108,17 +108,17 @@ public class CompassView extends View {
     // permet de changer l'orientation de la boussole
     public void setNorthOrientation(float rotation) {
 
-        // on met � jour l'orientation uniquement si elle a chang�
+        // on met a jour l'orientation uniquement si elle a change
         if (rotation != this.northOrientation) {
-            //Arr�ter l'ancienne animation
+            //Arreter l'ancienne animation
             removeCallbacks(animationTask);
             
         	//Position courante
             this.startNorthOrientation = this.northOrientation;
-            //Position d�sir�e
+            //Position desiree
             this.endNorthOrientation   = rotation;
 
-            //D�termination du sens de rotation de l'aiguille
+            //Determination du sens de rotation de l'aiguille
             if ( ((startNorthOrientation + 180) % 360) > endNorthOrientation)
             {
             	//Rotation vers la gauche
@@ -146,7 +146,7 @@ public class CompassView extends View {
     private void initView() {
         Resources r = this.getResources();
 
-        // Paint pour l'arri�re plan de la boussole
+        // Paint pour l'arriere plan de la boussole
         circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         circlePaint.setColor(r.getColor(R.color.compassCircle));
 
@@ -160,8 +160,8 @@ public class CompassView extends View {
         trianglePath = new Path();
     }
 
-    // Permet de d�finir la taille de notre vue
-    // /!\ par d�faut un cadre de 100x100 si non red�fini
+    // Permet de definir la taille de notre vue
+    // /!\ par defaut un cadre de 100x100 si non redefini
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int measuredWidth  = measure(widthMeasureSpec);
@@ -173,7 +173,7 @@ public class CompassView extends View {
         setMeasuredDimension(d, d);
     }
 
-    // D�terminer la taille de notre vue
+    // Determiner la taille de notre vue
     private int measure(int measureSpec) {
         int result   = 0;
         int specMode = MeasureSpec.getMode(measureSpec);
@@ -181,7 +181,7 @@ public class CompassView extends View {
 
         if (specMode == MeasureSpec.UNSPECIFIED) {
 
-            // Taille par d�faut
+            // Taille par defaut
             result = 200;
         } else {
 
@@ -192,13 +192,13 @@ public class CompassView extends View {
         return result;
     }
 
-    // Appel�e pour redessiner la vue
+    // Appel pour redessiner la vue
     @Override
     protected void onDraw(Canvas canvas) {
         int centerX = getMeasuredWidth() / 2;
         int centerY = getMeasuredHeight() / 2;
 
-        // On d�termine le diam�tre du cercle (arri�re plan de la boussole)
+        // On determine le diametre du cercle (arriere plan de la boussole)
         int radius = Math.min(centerX, centerY);
 
         canvas.drawCircle(centerX, centerY, radius, circlePaint);
@@ -209,17 +209,17 @@ public class CompassView extends View {
         // On tourne le canvas pour que le nord pointe vers le haut
         canvas.rotate(-northOrientation, centerX, centerY);
 
-        // on cr�er une forme triangulaire qui part du centre du cercle et
+        // on creer une forme triangulaire qui part du centre du cercle et
         // pointe vers le haut
         trianglePath.reset();    // RAZ du path (une seule instance)
         trianglePath.moveTo(centerX, 10);
         trianglePath.lineTo(centerX - 10, centerY);
         trianglePath.lineTo(centerX + 10, centerY);
 
-        // On d�signe l'aiguille Nord
+        // On designe l'aiguille Nord
         canvas.drawPath(trianglePath, northPaint);
 
-        // On tourne notre vue de 180� pour d�signer l'auguille Sud
+        // On tourne notre vue de 180° pour designer l'auguille Sud
         canvas.rotate(180, centerX, centerY);
         canvas.drawPath(trianglePath, southPaint);
 
