@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     {
         this.fonctions = list;
     }
-    
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
               Toast.makeText(MainActivity.this, "Click sur l'item numero", Toast.LENGTH_LONG).show();
             }
         });
-        //sendData();
+
     }
 
     public void connexionBt(){
@@ -220,7 +220,28 @@ public class MainActivity extends AppCompatActivity {
                                     podometreValue=string.substring(7, 9);
                                     //Ici operations pour remplir txtViews+ remplissage BDD
                                     for(Fonction f : fonctions){
+                                        String nom = f.getCategorie();
+                                        switch(nom){
+                                            case "Poids":
+                                                f.setValeur(poidsValue);
+                                                //instructions BDD
+                                                break;
+                                            case "Nombre de pas effectués":
+                                                f.setValeur(podometreValue);
+                                                //instructions BDD
+                                                break;
+                                            case "Humidité ambiante":
+                                                f.setValeur(humidValue);
+                                                //instructions BDD
+                                                break;
+                                            case "Température":
+                                                f.setValeur(temperatureValue);
+                                                //instructions BDD
+                                                break;
 
+                                            default:
+                                                break;
+                                        }
 
                                     }
 
@@ -274,6 +295,7 @@ public class MainActivity extends AppCompatActivity {
         mListView.setAdapter(adapter);
     }
 
+    //Permet de vérifier l'état du Bluetooth
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
