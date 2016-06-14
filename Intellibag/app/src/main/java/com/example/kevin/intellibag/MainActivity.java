@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private Thread threadCom;
     private boolean stopThreadCom;
     private byte buffer[];
+    private boolean connecte = false;
 
     private ListView mListView;
     private Button btnRefresh;
@@ -73,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.lstFunc);
         btnRefresh = (Button) findViewById(R.id.btnRefresh);
         loginButton = (Button) findViewById(R.id.btnBoussole);
-
 
         fonctions = genererFonctions();
 
@@ -149,39 +149,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void refresh() throws IOException{
-        if(!mBluetoothAdapter.isEnabled())
+        if (!connecte)
         {
-            connexionBt();
-        }
-
-        else {
-            Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-
-            if(pairedDevices.isEmpty()){
-                Toast.makeText(MainActivity.this,"Veuillez d'abord vous appairer au sac",Toast.LENGTH_SHORT).show();
-            }
-            else
+            if(!mBluetoothAdapter.isEnabled())
             {
-                for(BluetoothDevice btDevice : pairedDevices){
-                    if(btDevice.getAddress().equals(DEVICE_ADDRESS)){
-                        mBluetoothDevice = btDevice;
-                        Toast.makeText(MainActivity.this,"Vous êtes bien relié au sac",Toast.LENGTH_SHORT).show();
+                connexionBt();
+            }
+
+            else {
+                Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+
+                if(pairedDevices.isEmpty()){
+                    Toast.makeText(MainActivity.this,"Veuillez d'abord vous appairer au sac",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    for(BluetoothDevice btDevice : pairedDevices){
+                        if(btDevice.getAddress().equals(DEVICE_ADDRESS)){
+                            mBluetoothDevice = btDevice;
+                            Toast.makeText(MainActivity.this,"Vous êtes bien relié au sac",Toast.LENGTH_SHORT).show();
+                        }
                     }
+
                 }
 
-            }
+                try{
+                    mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(PORT_UUID);
+                    mBluetoothSocket.connect();
 
-            boolean connected = true;
-            try{
-                mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(PORT_UUID);
-                mBluetoothSocket.connect();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
 
-            if(connected){
                 try{
                     oStream = mBluetoothSocket.getOutputStream();
                 }
@@ -195,12 +196,12 @@ public class MainActivity extends AppCompatActivity {
                 catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                beginListening();
-
+                connecte = true;
             }
 
         }
+
+        if(connecte) beginListening();
 
 
 
@@ -229,6 +230,7 @@ public class MainActivity extends AppCompatActivity {
                             handler.post(new Runnable() {
                                 public void run()
                                 {
+                                    Toast.makeText(MainActivity.this,"Récupération des données",Toast.LENGTH_SHORT).show();
                                     humidValue=string.substring(1, 2);
                                     temperatureValue=string.substring(3, 4);
                                     poidsValue=string.substring(5, 6);
@@ -303,6 +305,14 @@ public class MainActivity extends AppCompatActivity {
         return fonctions;
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        Toast.makeText(MainActivity.this, "Fermeture de l'app", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+
     private void afficherListeFonctions(){
         //fonctions = genererFonctions();
 
@@ -322,6 +332,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (state) {
                     case BluetoothAdapter.STATE_OFF:
                         Toast.makeText(MainActivity.this, "Bluetooth: non connecté", Toast.LENGTH_LONG).show();
+                        connecte = false;
                         break;
                     case BluetoothAdapter.STATE_TURNING_OFF:
                         Toast.makeText(MainActivity.this, "Bluetooth: déconnexion...", Toast.LENGTH_LONG).show();

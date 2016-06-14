@@ -83,7 +83,7 @@ public class CapteurBDD {
         capteur.setId(c.getInt(NUM_COL_ID));
         capteur.setNom(c.getString(NUM_COL_NOM));
         capteur.setDate(c.getString(NUM_COL_DATE));
-        capteur.setValeur(c.getString(NUM_COL_VALEUR));
+        capteur.setValeur(c.getInt(NUM_COL_VALEUR));
         //On ferme le cursor
         c.close();
 
