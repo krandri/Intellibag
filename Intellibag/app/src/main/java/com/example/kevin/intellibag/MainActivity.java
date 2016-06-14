@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -17,6 +18,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView mListView;
     private Button btnRefresh;
-    private Button loginButton;
+    private Button compassButton;
+    private TextView textStatus;
 
     String humid = "hmd";
     String temperature = "tmp";
@@ -71,9 +75,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         mListView = (ListView) findViewById(R.id.lstFunc);
         btnRefresh = (Button) findViewById(R.id.btnRefresh);
-        loginButton = (Button) findViewById(R.id.btnBoussole);
+        compassButton = (Button) findViewById(R.id.btnBoussole);
+        textStatus = (TextView) findViewById(R.id.txtStatus);
 
         fonctions = genererFonctions();
 
@@ -96,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(!mBluetoothAdapter.isEnabled())
         {
+            textStatus.setText("Statut: non connecté");
+            textStatus.setTextColor(Color.parseColor("#FE0101"));
             connexionBt();
         }
 
@@ -112,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         afficherListeFonctions();
 
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        compassButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -225,6 +233,8 @@ public class MainActivity extends AppCompatActivity {
                 if (!linkedToBag())
                 {
                     Toast.makeText(MainActivity.this,"Veuillez d'abord vous appairer au sac",Toast.LENGTH_SHORT).show();
+                    textStatus.setText("Statut: Non relié au sac");
+                    textStatus.setTextColor(Color.parseColor("#FEB201"));
                 }
                 else
                 {
@@ -281,9 +291,12 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        if(connecte)
-            if (linkedToBag()) beginListening();
-            else Toast.makeText(MainActivity.this,"Veuillez d'abord vous appairer au sac",Toast.LENGTH_SHORT).show();
+        if(connecte) {
+            textStatus.setText("Statut: connecté au sac");
+            textStatus.setTextColor(Color.parseColor("#01DCFE"));
+            beginListening();
+        }
+
 
 
     }
@@ -419,6 +432,8 @@ public class MainActivity extends AppCompatActivity {
                     case BluetoothAdapter.STATE_OFF:
                         Toast.makeText(MainActivity.this, "Bluetooth: non connecté", Toast.LENGTH_LONG).show();
                         connecte = false;
+                        textStatus.setText("Statut: non connecté");
+                        textStatus.setTextColor(Color.parseColor("#FE0101"));
                         break;
                     case BluetoothAdapter.STATE_TURNING_OFF:
                         Toast.makeText(MainActivity.this, "Bluetooth: déconnexion...", Toast.LENGTH_LONG).show();
