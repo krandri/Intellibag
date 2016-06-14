@@ -99,12 +99,15 @@ public class MainActivity extends AppCompatActivity {
             connexionBt();
         }
 
-/*        try{
-            refresh();
+        else{
+            try{
+                refresh();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }*/
+
 
         afficherListeFonctions();
 
@@ -121,8 +124,31 @@ public class MainActivity extends AppCompatActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                Toast.makeText(MainActivity.this, "Click sur l'item numero " + position + " id " + id, Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, "Click sur l'item numero " + position + " id " + id, Toast.LENGTH_LONG).show();
+                switch(position)
+                {
+                    case 0:
+                        Toast.makeText(MainActivity.this, "0", Toast.LENGTH_LONG).show();
+                        Intent intentPoids = new Intent(MainActivity.this, PoidsActivity.class);
+                        startActivity(intentPoids);
+                        break;
+                    case 1:
+                        Toast.makeText(MainActivity.this, "1", Toast.LENGTH_LONG).show();
+                        Intent intentPodom = new Intent(MainActivity.this, PodomActivity.class);
+                        startActivity(intentPodom);
+                        break;
+                    case 2:
+                        Toast.makeText(MainActivity.this, "2", Toast.LENGTH_LONG).show();
+                        Intent intentHumid = new Intent(MainActivity.this, HumidActivity.class);
+                        startActivity(intentHumid);
+                        break;
+                    case 3:
+                        Toast.makeText(MainActivity.this, "3", Toast.LENGTH_LONG).show();
+                        Intent intentTemper = new Intent(MainActivity.this, TemperatureActivity.class);
+                        startActivity(intentTemper);
+                        break;
 
+                }
 
             }
         });
@@ -148,6 +174,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public boolean linkedToBag()
+    {
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+
+        if(pairedDevices.isEmpty()){
+            return false;
+        }
+        else
+        {
+            for(BluetoothDevice btDevice : pairedDevices){
+                if(btDevice.getAddress().equals(DEVICE_ADDRESS)){
+                    mBluetoothDevice = btDevice;
+                    Toast.makeText(MainActivity.this,"Vous êtes bien relié au sac",Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            }
+
+        }
+
+        return false;
+    }
+
     public void refresh() throws IOException{
         if (!connecte)
         {
@@ -157,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             else {
+/*
                 Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 
                 if(pairedDevices.isEmpty()){
@@ -172,8 +221,39 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }
+*/
+                if (!linkedToBag())
+                {
+                    Toast.makeText(MainActivity.this,"Veuillez d'abord vous appairer au sac",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    try{
+                        mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(PORT_UUID);
+                        mBluetoothSocket.connect();
 
-                try{
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    try{
+                        oStream = mBluetoothSocket.getOutputStream();
+                    }
+                    catch(IOException e){
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        iStream=mBluetoothSocket.getInputStream();
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    connecte = true;
+                }
+               /* try{
                     mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(PORT_UUID);
                     mBluetoothSocket.connect();
 
@@ -196,13 +276,14 @@ public class MainActivity extends AppCompatActivity {
                 catch (IOException e) {
                     e.printStackTrace();
                 }
-                connecte = true;
+                connecte = true;*/
             }
 
         }
 
-        if(connecte) beginListening();
-
+        if(connecte)
+            if (linkedToBag()) beginListening();
+            else Toast.makeText(MainActivity.this,"Veuillez d'abord vous appairer au sac",Toast.LENGTH_SHORT).show();
 
 
     }
@@ -235,6 +316,10 @@ public class MainActivity extends AppCompatActivity {
                                     temperatureValue=string.substring(3, 4);
                                     poidsValue=string.substring(5, 6);
                                     podometreValue=string.substring(7, 9);
+
+                                    //TOAST POUR SAVOIR SI ON RECOIT DES DONNEES SI LE REMPLISSAGE DES TXTVIEW NE SE FAIT PAS
+                                    Toast.makeText(MainActivity.this,string,Toast.LENGTH_SHORT).show();
+
                                     //Ici operations pour remplir txtViews+ remplissage BDD
                                     for(Fonction f : fonctions){
                                         String nom = f.getCategorie();
@@ -308,6 +393,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
+        unregisterReceiver(mReceiver);
         Toast.makeText(MainActivity.this, "Fermeture de l'app", Toast.LENGTH_SHORT).show();
         finish();
     }

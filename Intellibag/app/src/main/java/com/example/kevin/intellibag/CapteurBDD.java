@@ -4,6 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.SQLException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CapteurBDD {
 
@@ -29,7 +33,7 @@ public class CapteurBDD {
         maBaseSQLite = new MaBaseSQLite(context, NOM_BDD, null, VERSION_BDD);
     }
 
-    public void open(){
+    public void open()throws SQLException {
         //on ouvre la BDD en écriture
         bdd = maBaseSQLite.getWritableDatabase();
     }
@@ -89,5 +93,109 @@ public class CapteurBDD {
 
         //On retourne le capteur
         return capteur;
+    }
+
+    // Getting All Podometre
+    public List<Capteur> getAllPodometre() {
+        List<Capteur> podometreList = new ArrayList<Capteur>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_CAPTEUR + "WHERE " + COL_NOM + "LIKE Podometre";
+
+        SQLiteDatabase db = maBaseSQLite.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Capteur podometre = new Capteur();
+                podometre.setId(Integer.parseInt(cursor.getString(0)));
+                podometre.setNom(cursor.getString(1));
+                podometre.setDate(cursor.getString(2));
+                podometre.setValeur(cursor.getInt(3));
+                // Adding contact to list
+                podometreList.add(podometre);
+            } while (cursor.moveToNext());
+        }
+
+        // return contact list
+        return podometreList;
+    }
+
+    // Getting All Poids
+    public List<Capteur> getAllPoids() {
+        List<Capteur> poidsList = new ArrayList<Capteur>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_CAPTEUR + "WHERE " + COL_NOM + "LIKE Poids";
+
+        SQLiteDatabase db = maBaseSQLite.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Capteur poids = new Capteur();
+                poids.setId(Integer.parseInt(cursor.getString(0)));
+                poids.setNom(cursor.getString(1));
+                poids.setDate(cursor.getString(2));
+                poids.setValeur(cursor.getInt(3));
+                // Adding contact to list
+                poidsList.add(poids);
+            } while (cursor.moveToNext());
+        }
+
+        // return contact list
+        return poidsList;
+    }
+
+    // Getting All Humidite
+    public List<Capteur> getAllHumidite() {
+        List<Capteur> humiditeList = new ArrayList<Capteur>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_CAPTEUR + "WHERE " + COL_NOM + "LIKE Humidite";
+
+        SQLiteDatabase db = maBaseSQLite.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Capteur humidite = new Capteur();
+                humidite.setId(Integer.parseInt(cursor.getString(0)));
+                humidite.setNom(cursor.getString(1));
+                humidite.setDate(cursor.getString(2));
+                humidite.setValeur(cursor.getInt(3));
+                // Adding contact to list
+                humiditeList.add(humidite);
+            } while (cursor.moveToNext());
+        }
+
+        // return contact list
+        return humiditeList;
+    }
+
+    // Getting All Temperature
+    public List<Capteur> getAllTemperature() {
+        List<Capteur> temperaturetList = new ArrayList<Capteur>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_CAPTEUR + "WHERE " + COL_NOM + "LIKE Temperature";
+
+        SQLiteDatabase db = maBaseSQLite.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Capteur temperature = new Capteur();
+                temperature.setId(Integer.parseInt(cursor.getString(0)));
+                temperature.setNom(cursor.getString(1));
+                temperature.setDate(cursor.getString(2));
+                temperature.setValeur(cursor.getInt(3));
+                // Adding contact to list
+                temperaturetList.add(temperature);
+            } while (cursor.moveToNext());
+        }
+
+        // return contact list
+        return temperaturetList;
     }
 }

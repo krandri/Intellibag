@@ -12,7 +12,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.example.kevin.intellibag.MainActivity"
-            android:label="iKing Smartbag" >
+            android:label="iKing Smartbag"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,7 +24,34 @@
         <activity
             android:name="com.example.kevin.intellibag.Boussole"
             android:label="Boussole"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity
+            android:name="com.example.kevin.intellibag.PoidsActivity"
+            android:label="Poids"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name="com.example.kevin.intellibag.PodomActivity"
+            android:label="Podometre"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name="com.example.kevin.intellibag.HumidActivity"
+            android:label="Humidité"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name="com.example.kevin.intellibag.TemperatureActivity"
+            android:label="Temperature"
+            android:screenOrientation="portrait">
+        </activity>
+
     </application>
 
 </manifest>
