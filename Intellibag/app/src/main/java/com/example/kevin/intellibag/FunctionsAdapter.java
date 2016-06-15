@@ -48,6 +48,7 @@ public class FunctionsAdapter extends ArrayAdapter<Fonction> {
     }
 
 
+
     private class FunctionViewHolder{
         public TextView categorie;
         public TextView valeur;

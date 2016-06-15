@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private byte buffer[];
     private boolean connecte = false;
 
+    private FunctionsAdapter adapter;
+
     private ListView mListView;
     private Button btnRefresh;
     private Button compassButton;
@@ -415,9 +417,28 @@ public class MainActivity extends AppCompatActivity {
     private void afficherListeFonctions(){
         //fonctions = genererFonctions();
 
-        FunctionsAdapter adapter = new FunctionsAdapter(MainActivity.this, fonctions);
+        adapter = new FunctionsAdapter(MainActivity.this, fonctions);
         mListView.setAdapter(adapter);
     }
+
+   public void onBtnClick(View v)
+    {
+        fonctions.clear();
+        genererFonctions();
+        for (int i = 0; i < fonctions.size(); i++)
+        {
+            podometreValue = temperatureValue = humidValue = poidsValue = "k";
+            adapter.getItem(i).setValeur(podometreValue);
+            System.out.println(fonctions.get(i).getCategorie() + " valeur = " + fonctions.get(i).getValeur());
+
+
+        }
+        adapter.notifyDataSetChanged();
+
+
+    }
+
+
 
     //Permet de vérifier l'état du Bluetooth
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {

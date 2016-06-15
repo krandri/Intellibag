@@ -61,6 +61,17 @@
                 android:layout_toRightOf="@+id/btnRefresh"
                 android:layout_toEndOf="@+id/btnRefresh"
                 android:layout_alignParentBottom="true" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Button"
+                android:id="@+id/button"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/btnBoussole"
+                android:layout_toEndOf="@+id/btnBoussole"
+                android:onClick="onBtnClick" />
         </RelativeLayout>
 
         <ListView
