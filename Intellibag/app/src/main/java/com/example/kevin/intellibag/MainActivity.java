@@ -55,31 +55,27 @@ public class MainActivity extends AppCompatActivity {
     private Button btnRefresh;
     private Button compassButton;
     private TextView textStatus;
+    private Button btnStop;
 
-    String humid = "hmd";
-    String temperature = "tmp";
-    String poids = "pds";
-    String podometre = "pdm";
+
+    String humid = "h";
+    String temperature = "t";
+    String poids = "w";
+    String podometre = "p";
 
     String humidValue = "00";
     String temperatureValue = "00";
     String poidsValue = "00";
     String podometreValue = "00";
 
-    public void setListeFonctions(List<Fonction> list)
-    {
-        this.fonctions = list;
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         mListView = (ListView) findViewById(R.id.lstFunc);
         btnRefresh = (Button) findViewById(R.id.btnRefresh);
+        btnStop = (Button) findViewById(R.id.btnStop);
         compassButton = (Button) findViewById(R.id.btnBoussole);
         textStatus = (TextView) findViewById(R.id.txtStatus);
 
@@ -213,29 +209,12 @@ public class MainActivity extends AppCompatActivity {
             {
                 connexionBt();
             }
-
             else {
-/*
-                Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-
-                if(pairedDevices.isEmpty()){
-                    Toast.makeText(MainActivity.this,"Veuillez d'abord vous appairer au sac",Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    for(BluetoothDevice btDevice : pairedDevices){
-                        if(btDevice.getAddress().equals(DEVICE_ADDRESS)){
-                            mBluetoothDevice = btDevice;
-                            Toast.makeText(MainActivity.this,"Vous êtes bien relié au sac",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                }
-*/
                 if (!linkedToBag())
                 {
                     Toast.makeText(MainActivity.this,"Veuillez d'abord vous appairer au sac",Toast.LENGTH_SHORT).show();
                     textStatus.setText("Statut: Non relié au sac");
+                    btnStop.setEnabled(false);
                     textStatus.setTextColor(Color.parseColor("#FEB201"));
                 }
                 else
@@ -265,30 +244,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     connecte = true;
                 }
-               /* try{
-                    mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(PORT_UUID);
-                    mBluetoothSocket.connect();
 
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-                try{
-                    oStream = mBluetoothSocket.getOutputStream();
-                }
-                catch(IOException e){
-                    e.printStackTrace();
-                }
-
-                try {
-                    iStream=mBluetoothSocket.getInputStream();
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-                connecte = true;*/
             }
 
         }
@@ -296,7 +252,8 @@ public class MainActivity extends AppCompatActivity {
         if(connecte) {
             textStatus.setText("Statut: connecté au sac");
             textStatus.setTextColor(Color.parseColor("#01DCFE"));
-            beginListening();
+            btnStop.setEnabled(true);
+            //beginListening();
         }
 
 
@@ -305,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void beginListening(){
         Toast.makeText(MainActivity.this,"Début de la lecture des données...",Toast.LENGTH_SHORT).show();
-        //sendData();
+        sendData();
         final Handler handler = new Handler();
         stopThreadCom = false;
         buffer = new byte[1024];
@@ -378,18 +335,25 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
 
-/*    public void sendData() {
+     public void sendData() {
 
         try {
             oStream.write(humid.getBytes());
-            oStream.write(temperature.getBytes());
-            oStream.write(poids.getBytes());
-            oStream.write(podometre.getBytes());
+            //oStream.write(temperature.getBytes());
+            //oStream.write(poids.getBytes());
+            //oStream.write(podometre.getBytes());
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }*/
+    }
+
+    public void onStopClick(View v) throws IOException{
+        stopThreadCom = true;
+        oStream.close();
+        iStream.close();
+        mBluetoothSocket.close();
+    }
 
     private List<Fonction> genererFonctions(){
         Fonction poids = new Fonction("kilogram", "Poids", poidsValue);
@@ -438,8 +402,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
     //Permet de vérifier l'état du Bluetooth
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -453,6 +415,7 @@ public class MainActivity extends AppCompatActivity {
                     case BluetoothAdapter.STATE_OFF:
                         Toast.makeText(MainActivity.this, "Bluetooth: non connecté", Toast.LENGTH_LONG).show();
                         connecte = false;
+                        btnStop.setEnabled(false);
                         textStatus.setText("Statut: non connecté");
                         textStatus.setTextColor(Color.parseColor("#FE0101"));
                         break;
