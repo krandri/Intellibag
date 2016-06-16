@@ -356,6 +356,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private List<Fonction> genererFonctions(){
+        if(!fonctions.isEmpty())fonctions.clear();
+
         Fonction poids = new Fonction("kilogram", "Poids", poidsValue);
         Fonction podom = new Fonction("footsteps_silhouette_variant", "Nombre de pas effectués", podometreValue);
         Fonction humid = new Fonction("drops", "Humidité ambiante", humidValue);
@@ -387,12 +389,11 @@ public class MainActivity extends AppCompatActivity {
 
    public void onBtnClick(View v)
     {
-        fonctions.clear();
-        genererFonctions();
+        podometreValue = temperatureValue = humidValue = poidsValue = "k";
+        fonctions = genererFonctions();
         for (int i = 0; i < fonctions.size(); i++)
         {
-            podometreValue = temperatureValue = humidValue = poidsValue = "k";
-            adapter.getItem(i).setValeur(podometreValue);
+            //adapter.getItem(i).setValeur(podometreValue);
             System.out.println(fonctions.get(i).getCategorie() + " valeur = " + fonctions.get(i).getValeur());
 
 

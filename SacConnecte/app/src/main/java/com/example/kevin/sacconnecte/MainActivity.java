@@ -9,13 +9,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+
+import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,45 +32,93 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothSocket socket;
     private OutputStream outputStream;
     private InputStream inputStream;
-    Button startButton, sendButton,clearButton,stopButton;
-    TextView textView;
-    EditText editText;
+    Button btnConnexion, sendButton,stopButton, compassButton;
+    ListView mListView;
+
     boolean deviceConnected=false;
     Thread thread;
     byte buffer[];
     int bufferPosition;
     boolean stopThread;
+
+    private String valPoids = "00";
+    private String valPodom = "00";
+    private String valTempe = "00";
+    private String valHumid = "00";
+
+    private List<Fonction> fonctions = new ArrayList<Fonction>();
+    private FunctionsAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        startButton = (Button) findViewById(R.id.buttonStart);
-        sendButton = (Button) findViewById(R.id.buttonSend);
-        clearButton = (Button) findViewById(R.id.buttonClear);
-        stopButton = (Button) findViewById(R.id.buttonStop);
-        editText = (EditText) findViewById(R.id.editText);
-        textView = (TextView) findViewById(R.id.textView);
+        btnConnexion = (Button) findViewById(R.id.btnConnexion);
+        sendButton = (Button) findViewById(R.id.btnRefresh);
+        stopButton = (Button) findViewById(R.id.btnDeconnexion);
+        compassButton = (Button) findViewById(R.id.btnCompass);
+        mListView = (ListView) findViewById(R.id.listView);
         setUiEnabled(false);
 
+        //Affichage de la date
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        String formattedDate = df.format(c.getTime());
+
+        TextView txtDate = (TextView)findViewById(R.id.textView2);
+        txtDate.setText(formattedDate);
+
+        //Affichage de la liste
+        afficherListeFonctions();
+
+
     }
+
+    public void onCompassClick(View v){
+        Intent intent = new Intent(MainActivity.this, Boussole.class);
+        startActivity(intent);
+    }
+
+    private List<Fonction> genererFonctions(){
+        if(!fonctions.isEmpty())fonctions.clear();
+        Fonction poids = new Fonction("kilogram", "Poids", valPoids);
+        Fonction podom = new Fonction("footsteps_silhouette_variant", "Nombre de pas effectués", valPodom);
+        Fonction humid = new Fonction("drops", "Humidité ambiante", valHumid);
+        Fonction temper = new Fonction("thermometer", "Température", valTempe);
+
+        fonctions.add(poids);
+        fonctions.add(podom);
+        fonctions.add(humid);
+        fonctions.add(temper);
+
+        return fonctions;
+    }
+
+    private void afficherListeFonctions(){
+        fonctions = genererFonctions();
+
+        adapter = new FunctionsAdapter(MainActivity.this, fonctions);
+        mListView.setAdapter(adapter);
+    }
+
 
     public void setUiEnabled(boolean bool)
     {
-        startButton.setEnabled(!bool);
+        btnConnexion.setEnabled(!bool);
         sendButton.setEnabled(bool);
         stopButton.setEnabled(bool);
-        textView.setEnabled(bool);
+
 
     }
 
-    public boolean BTinit()
+    public boolean linkedToBag()
     {
         boolean found=false;
-        BluetoothAdapter bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null) {
-            Toast.makeText(getApplicationContext(),"Device doesnt Support Bluetooth",Toast.LENGTH_SHORT).show();
+        BluetoothAdapter mBluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(getApplicationContext(),"Votre appareil ne supporte pas le Bluetooth",Toast.LENGTH_SHORT).show();
         }
-        if(!bluetoothAdapter.isEnabled())
+        if(!mBluetoothAdapter.isEnabled())
         {
             Intent enableAdapter = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableAdapter, 0);
@@ -74,18 +128,18 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();
+        Set<BluetoothDevice> bondedDevices = mBluetoothAdapter.getBondedDevices();
         if(bondedDevices.isEmpty())
         {
-            Toast.makeText(getApplicationContext(),"Please Pair the Device first",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Appairez vous tout d'abord avec le sac.",Toast.LENGTH_SHORT).show();
         }
         else
         {
-            for (BluetoothDevice iterator : bondedDevices)
+            for (BluetoothDevice btDevice : bondedDevices)
             {
-                if(iterator.getAddress().equals(DEVICE_ADDRESS))
+                if(btDevice.getAddress().equals(DEVICE_ADDRESS))
                 {
-                    device=iterator;
+                    device=btDevice;
                     found=true;
                     break;
                 }
@@ -94,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         return found;
     }
 
-    public boolean BTconnect()
+    public boolean createConnection()
     {
         boolean connected=true;
         try {
@@ -124,22 +178,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickStart(View view) {
-        if(BTinit())
+        if(linkedToBag())
         {
-            if(BTconnect())
+            if(createConnection())
             {
                 setUiEnabled(true);
                 deviceConnected=true;
-                beginListenForData();
-                textView.append("\nConnection Opened!\n");
+                beingListening();
+                Toast.makeText(MainActivity.this, "Connexion ouverte", Toast.LENGTH_LONG).show();
             }
 
         }
     }
 
-    void beginListenForData()
+    public void refresh(){
+        fonctions = genererFonctions();
+        adapter.notifyDataSetChanged();
+    }
+
+    void beingListening()
     {
-        send();
+        sendTrames();
         final Handler handler = new Handler();
         stopThread = false;
         buffer = new byte[1024];
@@ -157,10 +216,14 @@ public class MainActivity extends AppCompatActivity {
                             byte[] rawBytes = new byte[byteCount];
                             inputStream.read(rawBytes);
                             final String string=new String(rawBytes,"UTF-8");
+                            //Ici opérations substring
+
+
                             handler.post(new Runnable() {
+                                //opération sur l'interface
                                 public void run()
                                 {
-                                    textView.append(string);
+                                    Toast.makeText(MainActivity.this, "Donneés actualisées", Toast.LENGTH_LONG).show();
                                 }
                             });
 
@@ -177,28 +240,16 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
 
-    public void send(){
-
+    public void sendTrames(){
         try {
             outputStream.write("h".getBytes());
             outputStream.write("t".getBytes());
+            outputStream.write("w".getBytes());
+            outputStream.write("p".getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        textView.append("\nSent Data "+"\n");
-
-    }
-
-    public void onClickSend(View view) {
-        String string = "h";
-        string.concat("\n");
-        try {
-            outputStream.write(string.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        textView.append("\nSent Data:"+string+"\n");
-
+        Toast.makeText(MainActivity.this, "Données envoyées, en attente de reception...", Toast.LENGTH_LONG).show();
     }
 
     public void onClickStop(View view) throws IOException {
@@ -208,10 +259,7 @@ public class MainActivity extends AppCompatActivity {
         socket.close();
         setUiEnabled(false);
         deviceConnected=false;
-        textView.append("\nConnection Closed!\n");
+        Toast.makeText(MainActivity.this, "Connexion au sac coupée", Toast.LENGTH_LONG).show();
     }
 
-    public void onClickClear(View view) {
-        textView.setText("");
-    }
 }
