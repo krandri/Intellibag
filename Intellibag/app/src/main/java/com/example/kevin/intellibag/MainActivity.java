@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -17,6 +18,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,9 +47,14 @@ public class MainActivity extends AppCompatActivity {
     private Thread threadCom;
     private boolean stopThreadCom;
     private byte buffer[];
+    private boolean connecte = false;
+
+    private FunctionsAdapter adapter;
 
     private ListView mListView;
     private Button btnRefresh;
+    private Button compassButton;
+    private TextView textStatus;
 
     String humid = "hmd";
     String temperature = "tmp";
@@ -69,8 +77,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         mListView = (ListView) findViewById(R.id.lstFunc);
         btnRefresh = (Button) findViewById(R.id.btnRefresh);
+        compassButton = (Button) findViewById(R.id.btnBoussole);
+        textStatus = (TextView) findViewById(R.id.txtStatus);
 
         fonctions = genererFonctions();
 
@@ -93,22 +104,62 @@ public class MainActivity extends AppCompatActivity {
 
         if(!mBluetoothAdapter.isEnabled())
         {
+            textStatus.setText("Statut: non connecté");
+            textStatus.setTextColor(Color.parseColor("#FE0101"));
             connexionBt();
         }
 
-/*        try{
-            refresh();
+        else{
+            try{
+                refresh();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }*/
+
 
         afficherListeFonctions();
+
+
+        compassButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Boussole.class);
+                startActivity(intent);
+            }
+        });
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-              Toast.makeText(MainActivity.this, "Click sur l'item numero", Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, "Click sur l'item numero " + position + " id " + id, Toast.LENGTH_LONG).show();
+                switch(position)
+                {
+                    case 0:
+                        Toast.makeText(MainActivity.this, "0", Toast.LENGTH_LONG).show();
+                        Intent intentPoids = new Intent(MainActivity.this, PoidsActivity.class);
+                        startActivity(intentPoids);
+                        break;
+                    case 1:
+                        Toast.makeText(MainActivity.this, "1", Toast.LENGTH_LONG).show();
+                        Intent intentPodom = new Intent(MainActivity.this, PodomActivity.class);
+                        startActivity(intentPodom);
+                        break;
+                    case 2:
+                        Toast.makeText(MainActivity.this, "2", Toast.LENGTH_LONG).show();
+                        Intent intentHumid = new Intent(MainActivity.this, HumidActivity.class);
+                        startActivity(intentHumid);
+                        break;
+                    case 3:
+                        Toast.makeText(MainActivity.this, "3", Toast.LENGTH_LONG).show();
+                        Intent intentTemper = new Intent(MainActivity.this, TemperatureActivity.class);
+                        startActivity(intentTemper);
+                        break;
+
+                }
+
             }
         });
 
@@ -133,40 +184,97 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void refresh() throws IOException{
-        if(!mBluetoothAdapter.isEnabled())
+    public boolean linkedToBag()
+    {
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+
+        if(pairedDevices.isEmpty()){
+            return false;
+        }
+        else
         {
-            connexionBt();
+            for(BluetoothDevice btDevice : pairedDevices){
+                if(btDevice.getAddress().equals(DEVICE_ADDRESS)){
+                    mBluetoothDevice = btDevice;
+                    Toast.makeText(MainActivity.this,"Vous êtes bien relié au sac",Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            }
+
         }
 
-        else {
-            Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+        return false;
+    }
 
-            if(pairedDevices.isEmpty()){
-                Toast.makeText(MainActivity.this,"Veuillez d'abord vous appairer au sac",Toast.LENGTH_SHORT).show();
-            }
-            else
+    public void refresh() throws IOException{
+        if (!connecte)
+        {
+            if(!mBluetoothAdapter.isEnabled())
             {
-                for(BluetoothDevice btDevice : pairedDevices){
-                    if(btDevice.getAddress().equals(DEVICE_ADDRESS)){
-                        mBluetoothDevice = btDevice;
-                        Toast.makeText(MainActivity.this,"Vous êtes bien relié au sac",Toast.LENGTH_SHORT).show();
+                connexionBt();
+            }
+
+            else {
+/*
+                Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+
+                if(pairedDevices.isEmpty()){
+                    Toast.makeText(MainActivity.this,"Veuillez d'abord vous appairer au sac",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    for(BluetoothDevice btDevice : pairedDevices){
+                        if(btDevice.getAddress().equals(DEVICE_ADDRESS)){
+                            mBluetoothDevice = btDevice;
+                            Toast.makeText(MainActivity.this,"Vous êtes bien relié au sac",Toast.LENGTH_SHORT).show();
+                        }
                     }
+
+                }
+*/
+                if (!linkedToBag())
+                {
+                    Toast.makeText(MainActivity.this,"Veuillez d'abord vous appairer au sac",Toast.LENGTH_SHORT).show();
+                    textStatus.setText("Statut: Non relié au sac");
+                    textStatus.setTextColor(Color.parseColor("#FEB201"));
+                }
+                else
+                {
+                    try{
+                        mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(PORT_UUID);
+                        mBluetoothSocket.connect();
+
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    try{
+                        oStream = mBluetoothSocket.getOutputStream();
+                    }
+                    catch(IOException e){
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        iStream=mBluetoothSocket.getInputStream();
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    connecte = true;
+                }
+               /* try{
+                    mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(PORT_UUID);
+                    mBluetoothSocket.connect();
+
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
                 }
 
-            }
 
-            boolean connected = true;
-            try{
-                mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(PORT_UUID);
-                mBluetoothSocket.connect();
-
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if(connected){
                 try{
                     oStream = mBluetoothSocket.getOutputStream();
                 }
@@ -180,11 +288,15 @@ public class MainActivity extends AppCompatActivity {
                 catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                beginListening();
-
+                connecte = true;*/
             }
 
+        }
+
+        if(connecte) {
+            textStatus.setText("Statut: connecté au sac");
+            textStatus.setTextColor(Color.parseColor("#01DCFE"));
+            beginListening();
         }
 
 
@@ -214,10 +326,15 @@ public class MainActivity extends AppCompatActivity {
                             handler.post(new Runnable() {
                                 public void run()
                                 {
+                                    Toast.makeText(MainActivity.this,"Récupération des données",Toast.LENGTH_SHORT).show();
                                     humidValue=string.substring(1, 2);
                                     temperatureValue=string.substring(3, 4);
                                     poidsValue=string.substring(5, 6);
                                     podometreValue=string.substring(7, 9);
+
+                                    //TOAST POUR SAVOIR SI ON RECOIT DES DONNEES SI LE REMPLISSAGE DES TXTVIEW NE SE FAIT PAS
+                                    Toast.makeText(MainActivity.this,string,Toast.LENGTH_SHORT).show();
+
                                     //Ici operations pour remplir txtViews+ remplissage BDD
                                     for(Fonction f : fonctions){
                                         String nom = f.getCategorie();
@@ -288,12 +405,40 @@ public class MainActivity extends AppCompatActivity {
         return fonctions;
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        unregisterReceiver(mReceiver);
+        Toast.makeText(MainActivity.this, "Fermeture de l'app", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+
     private void afficherListeFonctions(){
         //fonctions = genererFonctions();
 
-        FunctionsAdapter adapter = new FunctionsAdapter(MainActivity.this, fonctions);
+        adapter = new FunctionsAdapter(MainActivity.this, fonctions);
         mListView.setAdapter(adapter);
     }
+
+   public void onBtnClick(View v)
+    {
+        fonctions.clear();
+        genererFonctions();
+        for (int i = 0; i < fonctions.size(); i++)
+        {
+            podometreValue = temperatureValue = humidValue = poidsValue = "k";
+            adapter.getItem(i).setValeur(podometreValue);
+            System.out.println(fonctions.get(i).getCategorie() + " valeur = " + fonctions.get(i).getValeur());
+
+
+        }
+        adapter.notifyDataSetChanged();
+
+
+    }
+
+
 
     //Permet de vérifier l'état du Bluetooth
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -307,6 +452,9 @@ public class MainActivity extends AppCompatActivity {
                 switch (state) {
                     case BluetoothAdapter.STATE_OFF:
                         Toast.makeText(MainActivity.this, "Bluetooth: non connecté", Toast.LENGTH_LONG).show();
+                        connecte = false;
+                        textStatus.setText("Statut: non connecté");
+                        textStatus.setTextColor(Color.parseColor("#FE0101"));
                         break;
                     case BluetoothAdapter.STATE_TURNING_OFF:
                         Toast.makeText(MainActivity.this, "Bluetooth: déconnexion...", Toast.LENGTH_LONG).show();
