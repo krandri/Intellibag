@@ -32,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothSocket socket;
     private OutputStream outputStream;
     private InputStream inputStream;
-    Button btnConnexion, sendButton,stopButton, compassButton;
-    ListView mListView;
+    private Button btnConnexion, sendButton,stopButton, compassButton;
+    private ListView mListView;
 
     boolean deviceConnected=false;
     Thread thread;
@@ -70,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Affichage de la liste
         afficherListeFonctions();
-
-
     }
 
     public void onCompassClick(View v){
@@ -107,8 +105,6 @@ public class MainActivity extends AppCompatActivity {
         btnConnexion.setEnabled(!bool);
         sendButton.setEnabled(bool);
         stopButton.setEnabled(bool);
-
-
     }
 
     public boolean linkedToBag()
