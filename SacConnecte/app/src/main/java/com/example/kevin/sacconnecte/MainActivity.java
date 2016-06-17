@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private String valTempe = "00";
     private String valHumid = "00";
 
+
     private List<Fonction> fonctions = new ArrayList<Fonction>();
     private FunctionsAdapter adapter;
 
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         stopButton = (Button) findViewById(R.id.btnDeconnexion);
         compassButton = (Button) findViewById(R.id.btnCompass);
         mListView = (ListView) findViewById(R.id.listView);
+
         setUiEnabled(false);
 
         //Affichage de la date
@@ -240,14 +242,14 @@ public class MainActivity extends AppCompatActivity {
                             final String string=new String(rawBytes,"UTF-8");
                             //Ici opérations substring -> CRASH
                             valHumid = string.substring(1,2);
-                            //valTempe = string.substring(3,4);
+                            valTempe = string.substring(3,4);
                             refresh();
 
                             handler.post(new Runnable() {
                                 //opération sur l'interface
                                 public void run()
                                 {
-                                    //Toast.makeText(MainActivity.this, "Donneés actualisées", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this, "Donneés actualisées", Toast.LENGTH_LONG).show();
                                 }
                             });
 
