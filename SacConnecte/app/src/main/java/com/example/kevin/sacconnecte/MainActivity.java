@@ -187,6 +187,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void sendTrames(){
+        try {
+            outputStream.write("h".getBytes());
+            outputStream.write("t".getBytes());
+            outputStream.write("w".getBytes());
+            outputStream.write("p".getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Toast.makeText(MainActivity.this, "Données envoyées, en attente de reception...", Toast.LENGTH_LONG).show();
+    }
+
+
+    public void onClickSend(View v) throws IOException{
+        sendTrames();
+    }
+
+    public void onClickStop(View view) throws IOException {
+        stopThread = true;
+        outputStream.close();
+        inputStream.close();
+        socket.close();
+        setUiEnabled(false);
+        deviceConnected=false;
+        Toast.makeText(MainActivity.this, "Connexion au sac coupée", Toast.LENGTH_LONG).show();
+    }
+
     public void refresh(){
         fonctions = genererFonctions();
         adapter.notifyDataSetChanged();
@@ -194,7 +221,6 @@ public class MainActivity extends AppCompatActivity {
 
     void beingListening()
     {
-        sendTrames();
         final Handler handler = new Handler();
         stopThread = false;
         buffer = new byte[1024];
@@ -212,14 +238,16 @@ public class MainActivity extends AppCompatActivity {
                             byte[] rawBytes = new byte[byteCount];
                             inputStream.read(rawBytes);
                             final String string=new String(rawBytes,"UTF-8");
-                            //Ici opérations substring
-
+                            //Ici opérations substring -> CRASH
+                            valHumid = string.substring(1,2);
+                            //valTempe = string.substring(3,4);
+                            refresh();
 
                             handler.post(new Runnable() {
                                 //opération sur l'interface
                                 public void run()
                                 {
-                                    Toast.makeText(MainActivity.this, "Donneés actualisées", Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(MainActivity.this, "Donneés actualisées", Toast.LENGTH_LONG).show();
                                 }
                             });
 
@@ -236,26 +264,7 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
 
-    public void sendTrames(){
-        try {
-            outputStream.write("h".getBytes());
-            outputStream.write("t".getBytes());
-            outputStream.write("w".getBytes());
-            outputStream.write("p".getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Toast.makeText(MainActivity.this, "Données envoyées, en attente de reception...", Toast.LENGTH_LONG).show();
-    }
 
-    public void onClickStop(View view) throws IOException {
-        stopThread = true;
-        outputStream.close();
-        inputStream.close();
-        socket.close();
-        setUiEnabled(false);
-        deviceConnected=false;
-        Toast.makeText(MainActivity.this, "Connexion au sac coupée", Toast.LENGTH_LONG).show();
-    }
+
 
 }
