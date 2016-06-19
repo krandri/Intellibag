@@ -240,7 +240,8 @@ public class MainActivity extends AppCompatActivity {
                             byte[] rawBytes = new byte[byteCount];
                             inputStream.read(rawBytes);
                             final String string=new String(rawBytes,"UTF-8");
-                            //Ici opérations substring -> CRASH
+                            //Ici opérations substring -> CRASH A PARTIR D'ICI:
+                            //REFRESH CRASH -> SUBSTRING FONCTIONNE
                             valHumid = string.substring(1,2);
                             valTempe = string.substring(3,4);
                             refresh();

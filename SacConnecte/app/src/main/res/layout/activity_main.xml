@@ -59,20 +59,20 @@
                 android:text="Stop"
                 android:id="@+id/btnDeconnexion"
                 android:onClick="onClickStop"
-                android:layout_below="@+id/btnRefresh"
-                android:layout_toRightOf="@+id/btnConnexion"
-                android:layout_alignRight="@+id/btnRefresh"
-                android:layout_alignEnd="@+id/btnRefresh" />
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/btnRefresh"
+                android:layout_toEndOf="@+id/btnRefresh" />
 
-            <Button
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Boussole"
                 android:id="@+id/btnCompass"
-                android:layout_above="@+id/btnDeconnexion"
-                android:layout_toRightOf="@+id/btnRefresh"
-                android:layout_toEndOf="@+id/btnRefresh"
-                android:onClick="onCompassClick" />
+                android:onClick="onCompassClick"
+                android:src="@drawable/compass"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/btnDeconnexion"
+                android:layout_toEndOf="@+id/btnDeconnexion" />
 
         </RelativeLayout>
 
@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="170dp"
             android:id="@+id/listView"
-            android:layout_weight="0.60" />
+            android:layout_weight="0.72" />
 
     </LinearLayout>
 
