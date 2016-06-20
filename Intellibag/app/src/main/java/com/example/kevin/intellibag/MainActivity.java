@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
             textStatus.setText("Statut: connecté au sac");
             textStatus.setTextColor(Color.parseColor("#01DCFE"));
             btnStop.setEnabled(true);
-            //beginListening();
+            beginListening();
         }
 
 
@@ -428,7 +428,7 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             refresh();
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            Toast.makeText(MainActivity.this,e.toString(),Toast.LENGTH_LONG).show();
                         }
                         break;
                     case BluetoothAdapter.STATE_TURNING_ON:

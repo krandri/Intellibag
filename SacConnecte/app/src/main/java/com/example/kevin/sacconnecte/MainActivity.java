@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothSocket socket;
     private OutputStream outputStream;
     private InputStream inputStream;
-    private Button btnConnexion, sendButton,stopButton, compassButton;
+    private Button btnConnexion, sendButton,stopButton;
+    private ImageButton compassButton;
     private ListView mListView;
 
     boolean deviceConnected=false;
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         btnConnexion = (Button) findViewById(R.id.btnConnexion);
         sendButton = (Button) findViewById(R.id.btnRefresh);
         stopButton = (Button) findViewById(R.id.btnDeconnexion);
-        compassButton = (Button) findViewById(R.id.btnCompass);
+        compassButton = (ImageButton) findViewById(R.id.btnCompass);
         mListView = (ListView) findViewById(R.id.listView);
 
         setUiEnabled(false);
