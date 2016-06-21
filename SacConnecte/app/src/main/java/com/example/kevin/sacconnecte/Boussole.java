@@ -51,14 +51,6 @@ public class Boussole extends Activity {
         	sensor = sensors.get(0);
         }
 
-/*		final Button loginButton = (Button) findViewById(R.id.btnRetour);
-		loginButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});*/
     }
     
 	//Mettre a jour l'orientation

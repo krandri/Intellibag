@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 
 import android.widget.ImageButton;
@@ -74,6 +75,14 @@ public class MainActivity extends AppCompatActivity {
 
         //Affichage de la liste
         afficherListeFonctions();
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                Intent intentGraph = new Intent(MainActivity.this, GraphActivity.class);
+                startActivity(intentGraph);
+            }
+        });
     }
 
     public void onCompassClick(View v){
@@ -82,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private List<Fonction> genererFonctions(){
-        if(!fonctions.isEmpty())fonctions.clear();
+        //if(!fonctions.isEmpty())fonctions.clear();
         Fonction poids = new Fonction("kilogram", "Poids", valPoids);
         Fonction podom = new Fonction("footsteps_silhouette_variant", "Nombre de pas effectués", valPodom);
         Fonction humid = new Fonction("drops", "Humidité ambiante", valHumid);
@@ -194,9 +203,6 @@ public class MainActivity extends AppCompatActivity {
     public void sendTrames(){
         try {
             outputStream.write("h".getBytes());
-            outputStream.write("t".getBytes());
-            outputStream.write("w".getBytes());
-            outputStream.write("p".getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -219,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void refresh(){
+        fonctions.clear();
         fonctions = genererFonctions();
         adapter.notifyDataSetChanged();
     }
@@ -236,25 +243,28 @@ public class MainActivity extends AppCompatActivity {
                 {
                     try
                     {
-                        int byteCount = inputStream.available();
+                        int byteCount= inputStream.read(buffer);
                         if(byteCount > 0)
                         {
                             byte[] rawBytes = new byte[byteCount];
-                            inputStream.read(rawBytes);
+                            //inputStream.read(rawBytes);
+
                             final String string=new String(rawBytes,"UTF-8");
-                            //Ici opérations substring -> CRASH A PARTIR D'ICI:
-                            //REFRESH CRASH -> SUBSTRING FONCTIONNE
-                            valHumid = string.substring(1,2);
-                            valTempe = string.substring(3,4);
-                            refresh();
+                            String [] tab;
+
+                            System.out.println("long chaine: " + string.length());
+                            System.out.println("valeur: "+ string);
+                            final String str = string.replaceAll("[a-z]","");
+
 
                             handler.post(new Runnable() {
                                 //opération sur l'interface
-                                public void run()
-                                {
+                                public void run() {
                                     Toast.makeText(MainActivity.this, "Donneés actualisées", Toast.LENGTH_LONG).show();
+                                    refresh();
                                 }
                             });
+
 
                         }
                     }
