@@ -33,7 +33,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="106dp"
+            android:layout_weight="0.30">
 
             <Button
                 android:layout_width="wrap_content"
@@ -74,13 +75,66 @@
                 android:layout_toRightOf="@+id/btnDeconnexion"
                 android:layout_toEndOf="@+id/btnDeconnexion" />
 
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnLeft"
+                android:src="@drawable/left"
+                android:layout_below="@+id/btnUp"
+                android:layout_toLeftOf="@+id/btnUp"
+                android:layout_toStartOf="@+id/btnUp"
+                android:onClick="onClickLeft" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnRight"
+                android:src="@drawable/right"
+                android:layout_alignTop="@+id/btnLeft"
+                android:layout_toLeftOf="@+id/btnDeconnexion"
+                android:layout_toStartOf="@+id/btnDeconnexion"
+                android:onClick="onClickRight" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnUp"
+                android:src="@drawable/up"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/btnRight"
+                android:layout_toStartOf="@+id/btnRight"
+                android:onClick="onClickUp" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnDown"
+                android:src="@drawable/down"
+                android:layout_below="@+id/btnUp"
+                android:layout_alignLeft="@+id/btnUp"
+                android:layout_alignStart="@+id/btnUp"
+                android:onClick="onClickDown" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OK"
+                android:id="@+id/btnOk"
+                android:layout_alignTop="@+id/btnRight"
+                android:layout_toRightOf="@+id/btnRight"
+                android:layout_alignBottom="@+id/btnRight"
+                android:layout_alignRight="@+id/btnDeconnexion"
+                android:layout_alignEnd="@+id/btnDeconnexion"
+                android:nestedScrollingEnabled="false"
+                android:onClick="onClickOk" />
+
         </RelativeLayout>
 
         <ListView
             android:layout_width="wrap_content"
             android:layout_height="170dp"
             android:id="@+id/listView"
-            android:layout_weight="0.72" />
+            android:layout_weight="0.63" />
 
     </LinearLayout>
 

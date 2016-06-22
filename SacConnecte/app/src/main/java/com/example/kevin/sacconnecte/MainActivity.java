@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothSocket socket;
     private OutputStream outputStream;
     private InputStream inputStream;
-    private Button btnConnexion, sendButton,stopButton;
-    private ImageButton compassButton;
+    private Button btnConnexion, sendButton,stopButton, selectButton;
+    private ImageButton compassButton, upButton, downButton, leftButton, rightButton;
     private ListView mListView;
 
     boolean deviceConnected=false;
@@ -60,7 +59,14 @@ public class MainActivity extends AppCompatActivity {
         btnConnexion = (Button) findViewById(R.id.btnConnexion);
         sendButton = (Button) findViewById(R.id.btnRefresh);
         stopButton = (Button) findViewById(R.id.btnDeconnexion);
+        selectButton = (Button) findViewById(R.id.btnOk);
+
         compassButton = (ImageButton) findViewById(R.id.btnCompass);
+        upButton = (ImageButton) findViewById(R.id.btnUp);
+        downButton = (ImageButton) findViewById(R.id.btnDown);
+        leftButton = (ImageButton) findViewById(R.id.btnLeft);
+        rightButton = (ImageButton) findViewById(R.id.btnRight);
+
         mListView = (ListView) findViewById(R.id.listView);
 
         setUiEnabled(false);
@@ -118,6 +124,12 @@ public class MainActivity extends AppCompatActivity {
         btnConnexion.setEnabled(!bool);
         sendButton.setEnabled(bool);
         stopButton.setEnabled(bool);
+        upButton.setClickable(bool);
+        downButton.setClickable(bool);
+        leftButton.setClickable(bool);
+        rightButton.setClickable(bool);
+        selectButton.setClickable(bool);
+
     }
 
     public boolean linkedToBag()
@@ -193,8 +205,8 @@ public class MainActivity extends AppCompatActivity {
             {
                 setUiEnabled(true);
                 deviceConnected=true;
-                beingListening();
-                Toast.makeText(MainActivity.this, "Connexion ouverte", Toast.LENGTH_LONG).show();
+                beginListening();
+                Toast.makeText(MainActivity.this, "Connexion ouverte", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -206,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Toast.makeText(MainActivity.this, "Données envoyées, en attente de reception...", Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity.this, "Données envoyées, en attente de reception...", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -221,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
         socket.close();
         setUiEnabled(false);
         deviceConnected=false;
-        Toast.makeText(MainActivity.this, "Connexion au sac coupée", Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity.this, "Connexion au sac coupée", Toast.LENGTH_SHORT).show();
     }
 
     public void refresh(){
@@ -230,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    void beingListening()
+    void beginListening()
     {
         final Handler handler = new Handler();
         stopThread = false;
@@ -243,34 +255,40 @@ public class MainActivity extends AppCompatActivity {
                 {
                     try
                     {
-                        int byteCount= inputStream.read(buffer);
+                        int byteCount= inputStream.available();
                         if(byteCount > 0)
                         {
                             byte[] rawBytes = new byte[byteCount];
-                            //inputStream.read(rawBytes);
-
+                            inputStream.read(rawBytes);
                             final String string=new String(rawBytes,"UTF-8");
+
                             String [] tab;
 
                             System.out.println("long chaine: " + string.length());
                             System.out.println("valeur: "+ string);
                             final String str = string.replaceAll("[a-z]","");
+                            tab = str.split(";");
+                            valTempe=tab[0]+"°C";
+                            valHumid=tab[1]+"%";
 
 
                             handler.post(new Runnable() {
                                 //opération sur l'interface
                                 public void run() {
-                                    Toast.makeText(MainActivity.this, "Donneés actualisées", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this, "Donneés actualisées", Toast.LENGTH_SHORT).show();
                                     refresh();
                                 }
                             });
-
 
                         }
                     }
                     catch (IOException ex)
                     {
                         stopThread = true;
+                    }
+                    catch(ArrayIndexOutOfBoundsException aex)
+                    {
+                        System.out.println("Et non!");
                     }
                 }
             }
@@ -279,7 +297,48 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
 
+    public void onClickLeft(View v) {
+        try {
+            outputStream.write("g".getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void onClickRight(View v) {
+        try {
+            outputStream.write("d".getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void onClickUp(View v) {
+        try {
+            outputStream.write("o".getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+            }
+    }
+
+
+    public void onClickDown(View v) {
+        try {
+            outputStream.write("b".getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onClickOk(View v) {
+        try {
+            outputStream.write("s".getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
 }
