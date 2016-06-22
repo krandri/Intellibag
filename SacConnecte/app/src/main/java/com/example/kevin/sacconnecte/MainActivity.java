@@ -3,7 +3,12 @@ package com.example.kevin.sacconnecte;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,17 +21,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
+    public static final int TYPE_STEP_COUNTER = 0;
     private final String DEVICE_ADDRESS="00:14:02:26:01:91";
     private final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");//Serial Port Service ID
     private BluetoothDevice device;
@@ -49,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
     private String valHumid = "00";
 
 
+    private SensorManager mSensorManager;
+    private Sensor mStepCounterSensor;
+    private Sensor mStepDetectorSensor;
+    private TextView textPodom;
+
+
     private List<Fonction> fonctions = new ArrayList<Fonction>();
     private FunctionsAdapter adapter;
 
@@ -68,6 +83,12 @@ public class MainActivity extends AppCompatActivity {
         rightButton = (ImageButton) findViewById(R.id.btnRight);
 
         mListView = (ListView) findViewById(R.id.listView);
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mStepCounterSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        mStepDetectorSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        textPodom = (TextView) findViewById(R.id.textView5) ;
+
 
         setUiEnabled(false);
 
@@ -99,12 +120,12 @@ public class MainActivity extends AppCompatActivity {
     private List<Fonction> genererFonctions(){
         //if(!fonctions.isEmpty())fonctions.clear();
         Fonction poids = new Fonction("kilogram", "Poids", valPoids);
-        Fonction podom = new Fonction("footsteps_silhouette_variant", "Nombre de pas effectués", valPodom);
+        //Fonction podom = new Fonction("footsteps_silhouette_variant", "Nombre de pas effectués", valPodom);
         Fonction humid = new Fonction("drops", "Humidité ambiante", valHumid);
         Fonction temper = new Fonction("thermometer", "Température", valTempe);
 
         fonctions.add(poids);
-        fonctions.add(podom);
+        //fonctions.add(podom);
         fonctions.add(humid);
         fonctions.add(temper);
 
@@ -264,8 +285,6 @@ public class MainActivity extends AppCompatActivity {
 
                             String [] tab;
 
-                            System.out.println("long chaine: " + string.length());
-                            System.out.println("valeur: "+ string);
                             final String str = string.replaceAll("[a-z]","");
                             tab = str.split(";");
                             valTempe=tab[0]+"°C";
@@ -297,6 +316,7 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
 
+    //Gestion des fleches et du bouton ok pour l'écran
     public void onClickLeft(View v) {
         try {
             outputStream.write("g".getBytes());
@@ -338,6 +358,43 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    //Fonctions pour le podometre
+    public void onSensorChanged(SensorEvent event) {
+        Sensor sensor = event.sensor;
+        float[] values = event.values;
+        int value = -1;
+
+        if (values.length > 0) {
+            value = (int) values[0];
+        }
+
+        if (sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+            textPodom.setText("Nombre de pas effectués : "+ value );
+        } else if (sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
+            // For test only. Only allowed value is 1.0 i.e. for step taken
+            textPodom.setText("Nombre de pas effectués : "+ value );
+        }
+    }
+
+    public void onAccuracyChanged(Sensor sensor, int accuracy){
+
+    }
+
+    protected void onResume() {
+
+        super.onResume();
+
+        mSensorManager.registerListener(this, mStepCounterSensor,SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, mStepDetectorSensor, SensorManager.SENSOR_DELAY_FASTEST);
+
+    }
+
+    protected void onStop() {
+        super.onStop();
+        mSensorManager.unregisterListener(this, mStepCounterSensor);
+        mSensorManager.unregisterListener(this, mStepDetectorSensor);
     }
 
 

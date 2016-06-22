@@ -34,7 +34,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="106dp"
-            android:layout_weight="0.30">
+            android:layout_weight="0.17">
 
             <Button
                 android:layout_width="wrap_content"
@@ -80,61 +80,97 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/btnLeft"
                 android:src="@drawable/left"
-                android:layout_below="@+id/btnUp"
-                android:layout_toLeftOf="@+id/btnUp"
-                android:layout_toStartOf="@+id/btnUp"
-                android:onClick="onClickLeft" />
+                android:onClick="onClickLeft"
+                android:layout_alignTop="@+id/btnDown"
+                android:layout_alignRight="@+id/textView3"
+                android:layout_alignEnd="@+id/textView3" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnRight"
                 android:src="@drawable/right"
-                android:layout_alignTop="@+id/btnLeft"
-                android:layout_toLeftOf="@+id/btnDeconnexion"
-                android:layout_toStartOf="@+id/btnDeconnexion"
-                android:onClick="onClickRight" />
+                android:onClick="onClickRight"
+                android:layout_alignTop="@+id/btnDown"
+                android:layout_toRightOf="@+id/btnDown"
+                android:layout_toEndOf="@+id/btnDown" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnUp"
                 android:src="@drawable/up"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/btnRight"
-                android:layout_toStartOf="@+id/btnRight"
-                android:onClick="onClickUp" />
+                android:onClick="onClickUp"
+                android:layout_below="@+id/btnRefresh"
+                android:layout_toRightOf="@+id/btnLeft"
+                android:layout_toEndOf="@+id/btnLeft" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnDown"
                 android:src="@drawable/down"
+                android:onClick="onClickDown"
                 android:layout_below="@+id/btnUp"
                 android:layout_alignLeft="@+id/btnUp"
-                android:layout_alignStart="@+id/btnUp"
-                android:onClick="onClickDown" />
+                android:layout_alignStart="@+id/btnUp" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="OK"
                 android:id="@+id/btnOk"
-                android:layout_alignTop="@+id/btnRight"
-                android:layout_toRightOf="@+id/btnRight"
-                android:layout_alignBottom="@+id/btnRight"
-                android:layout_alignRight="@+id/btnDeconnexion"
-                android:layout_alignEnd="@+id/btnDeconnexion"
                 android:nestedScrollingEnabled="false"
-                android:onClick="onClickOk" />
+                android:onClick="onClickOk"
+                android:layout_toRightOf="@+id/btnRight"
+                android:layout_toEndOf="@+id/btnRight"
+                android:layout_alignBottom="@+id/btnRight"
+                android:layout_alignTop="@+id/btnRight" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Controle de l&apos;écran:"
+                android:id="@+id/textView3"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
         </RelativeLayout>
 
         <ListView
             android:layout_width="wrap_content"
-            android:layout_height="170dp"
+            android:layout_height="41dp"
             android:id="@+id/listView"
-            android:layout_weight="0.63" />
+            android:layout_weight="0.42" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="59dp"
+            android:layout_weight="0.19">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Podomètre:"
+                android:id="@+id/textView4"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/textView5"
+                android:text="Nombre de pas effectués : "
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 
