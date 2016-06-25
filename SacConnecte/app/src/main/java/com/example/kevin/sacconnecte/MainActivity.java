@@ -36,7 +36,7 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     public static final int TYPE_STEP_COUNTER = 0;
-    private final String DEVICE_ADDRESS="00:14:02:26:01:91";
+    private final String DEVICE_ADDRESS="00:14:02:26:01:91"; // Adresse MAC de l'arduino
     private final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");//Serial Port Service ID
     private BluetoothDevice device;
     private BluetoothSocket socket;
@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private List<Fonction> fonctions = new ArrayList<Fonction>();
     private FunctionsAdapter adapter;
 
+
+    //Procédure qui s'effectue lors du lancement de l'application
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,26 +114,28 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
     }
 
+    //Evenement lié au clic sur le bouton de la boussole:
+    //Ouverture de la boussole
     public void onCompassClick(View v){
         Intent intent = new Intent(MainActivity.this, Boussole.class);
         startActivity(intent);
     }
 
+    //Fonction qui génère la liste de fonctions à afficher
     private List<Fonction> genererFonctions(){
-        //if(!fonctions.isEmpty())fonctions.clear();
         Fonction poids = new Fonction("kilogram", "Poids", valPoids);
         //Fonction podom = new Fonction("footsteps_silhouette_variant", "Nombre de pas effectués", valPodom);
         Fonction humid = new Fonction("drops", "Humidité ambiante", valHumid);
         Fonction temper = new Fonction("thermometer", "Température", valTempe);
 
         fonctions.add(poids);
-        //fonctions.add(podom);
         fonctions.add(humid);
         fonctions.add(temper);
 
         return fonctions;
     }
 
+    //Procédure qui affiche la liste des fonctions dans l'application
     private void afficherListeFonctions(){
         fonctions = genererFonctions();
 
@@ -140,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
+    //Gere les boutons de l'application, certains boutons sont activés selon la valeur du booléen
     public void setUiEnabled(boolean bool)
     {
         btnConnexion.setEnabled(!bool);
@@ -153,6 +158,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
+    //fonction qui vérifie si l'appareil est appairé au sac:
+    //Vérification si le bluetooth est connecté, puis vérification
+    //si le sac est appairé au téléphone
     public boolean linkedToBag()
     {
         boolean found=false;
@@ -190,6 +198,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return found;
     }
 
+    //Fonction qui créé la connexion entre l'arduino et l'appareil: création d'un socket bluetooth,
+    // création de flux entrants/sortants pour l'écriture et la lecture
     public boolean createConnection()
     {
         boolean connected=true;
@@ -219,6 +229,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return connected;
     }
 
+    //Procédure qui se déclenche lors de l'appui sur le bouton connexion:
+    //création de la connexion et début de l'écoute entre l'appareil et le sac
     public void onClickStart(View view) {
         if(linkedToBag())
         {
@@ -233,6 +245,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+    //Envoi de trames permettant de récupérer les données de l'arduino:
+    //écriture dans le flux de sortie
     public void sendTrames(){
         try {
             outputStream.write("h".getBytes());
@@ -242,11 +256,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Toast.makeText(MainActivity.this, "Données envoyées, en attente de reception...", Toast.LENGTH_SHORT).show();
     }
 
-
+    //Gestion du clic sur "Envoyer":
+    //Envoi des trames pour récupérer les données des capteurs du sac
     public void onClickSend(View v) throws IOException{
         sendTrames();
     }
 
+    //Gestion du clic sur "stop":
+    // on stoppe le thread, puis on ferme le socket ainsi que les flux entrants et sortants
     public void onClickStop(View view) throws IOException {
         stopThread = true;
         outputStream.close();
@@ -257,12 +274,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Toast.makeText(MainActivity.this, "Connexion au sac coupée", Toast.LENGTH_SHORT).show();
     }
 
+    //Procédure permettant de rafraichir l'affichage de l'application
     public void refresh(){
         fonctions.clear();
         fonctions = genererFonctions();
         adapter.notifyDataSetChanged();
     }
 
+    //Procédure qui permet de démarrer l'écoute entre l'arduino et l'appareil:
+    //Création d'un thread qui va permettre de récupérer les octets envoyés par l'arduino
+    //Puis conversion des bits en String, enfin appel du rafraichissement dans le Handler (permet la gestion de l'interface graphique
+    //car il est impossible de rafraichir l'interface à l'intérieur du thread)
     void beginListening()
     {
         final Handler handler = new Handler();
@@ -316,7 +338,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         thread.start();
     }
 
-    //Gestion des fleches et du bouton ok pour l'écran
+    //Gestion des fleches et du bouton ok pour l'écran:
+    //Cela correspond à des envois de trames à l'arduino afin de controler l'écran de l'arduino
+
+    //gestion du bouton left
     public void onClickLeft(View v) {
         try {
             outputStream.write("g".getBytes());
@@ -324,7 +349,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             e.printStackTrace();
         }
     }
-
+    //gestion du bouton right
     public void onClickRight(View v) {
         try {
             outputStream.write("d".getBytes());
@@ -334,6 +359,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
+    //gestion du bouton up
     public void onClickUp(View v) {
         try {
             outputStream.write("o".getBytes());
@@ -342,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
     }
 
-
+    //gestion du bouton down
     public void onClickDown(View v) {
         try {
             outputStream.write("b".getBytes());
@@ -351,6 +377,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+    //gestion du bouton Ok
     public void onClickOk(View v) {
         try {
             outputStream.write("s".getBytes());
@@ -361,6 +388,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     //Fonctions pour le podometre
+    //Procédure appelée lorsque le capteur de l'accéléromètre est activé (mouvement)
     public void onSensorChanged(SensorEvent event) {
         Sensor sensor = event.sensor;
         float[] values = event.values;

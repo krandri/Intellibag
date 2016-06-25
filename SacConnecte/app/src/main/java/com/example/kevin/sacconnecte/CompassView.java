@@ -1,7 +1,5 @@
 package com.example.kevin.sacconnecte;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -12,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- * Class description
+ * Classe correspondant à la vue de la boussole (affichage)
  *
  *
  */

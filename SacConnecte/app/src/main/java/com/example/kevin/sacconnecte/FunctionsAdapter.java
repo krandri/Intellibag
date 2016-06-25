@@ -11,6 +11,12 @@ import android.widget.TextView;
 import java.util.List;
 
 
+/*
+    Cette classe permet de personnaliser la listView afin d'afficher plusieurs informations dans les éléments de liste
+
+ */
+
+
 public class FunctionsAdapter extends ArrayAdapter<Fonction> {
 
     public FunctionsAdapter(Context context, List<Fonction> fonctions) {
